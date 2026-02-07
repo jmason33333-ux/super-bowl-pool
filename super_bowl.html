@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Super Bowl LX Pool</title>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f4f1eb; --panel: #ffffff; --border: #d4cfc5; --borderDk: #b0a898;
+    --text: #1a1a1a; --textMid: #444444; --textDim: #777777;
+    --field: #1b7340; --fieldLt: #22964f; --fieldBg: #e8f5ec;
+    --red: #c62828; --redBg: #fde8e8; --yellow: #e6a800; --yellowBg: #fef9e7;
+    --orange: #d84315; --purple: #6a1b9a; --blue: #1565c0; --blueBg: #e3f0fc;
+    --gold: #c8960c; --goldBg: #fdf4dc; --silver: #607d8b; --silverBg: #eceff1;
+    --bronze: #bf5b17; --bronzeBg: #fff3e0;
+  }
+  body { background: var(--bg); font-family: 'Silkscreen','Courier New',monospace; color: var(--text); -webkit-font-smoothing: antialiased; }
+  button { font-family: inherit; border: none; outline: none; }
+  input { font-family: inherit; border: none; outline: none; }
+  a { font-family: inherit; }
+  body::before {
+    content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none; z-index: 0; opacity: 0.018;
+    background: repeating-linear-gradient(0deg, transparent, transparent 58px, var(--field) 58px, var(--field) 60px);
+  }
+  .bx { border: 3px solid var(--border); box-shadow: 3px 3px 0px rgba(0,0,0,0.08); }
+  .header {
+    background: var(--field); border-bottom: 4px solid #145a30;
+    padding: 22px 16px 18px; text-align: center; position: relative; overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0.1;
+    background: repeating-linear-gradient(90deg, transparent, transparent 48px, #fff 48px, #fff 50px);
+  }
+  .header h1 { font-size: 28px; color: #fff; letter-spacing: 5px; text-shadow: 0 2px 0 #0d4a24; position: relative; margin-bottom: 6px; }
+  .header .sub { font-size: 11px; color: #ffffffcc; letter-spacing: 2px; position: relative; }
+  .tabs { display: flex; gap: 8px; justify-content: center; margin-top: 16px; position: relative; }
+  .tab { padding: 10px 18px; font-size: 11px; letter-spacing: 2px; cursor: pointer; border: 3px solid #ffffff44; background: transparent; color: #ffffffcc; }
+  .tab.on { background: #fff; color: var(--field); border-color: #fff; box-shadow: 3px 3px 0 #0d4a24; }
+  .tab .ct { margin-left: 6px; background: #ffffff22; padding: 2px 6px; font-size: 10px; }
+  .tab.on .ct { background: #1b734022; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 18px 16px 120px; position: relative; z-index: 1; }
+  .badge { font-weight: 700; font-size: 12px; padding: 5px 10px; border: 2px solid; min-width: 50px; text-align: center; display: inline-block; letter-spacing: 1px; }
+  .bg { color: var(--field); border-color: var(--field); background: #1b734014; }
+  .by { color: var(--yellow); border-color: var(--yellow); background: #e6a80014; }
+  .bo { color: var(--orange); border-color: var(--orange); background: #d8431514; }
+  .br { color: var(--red); border-color: var(--red); background: #c6282814; }
+  .bp { color: var(--purple); border-color: var(--purple); background: #6a1b9a14; }
+  .bet-row { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid #d4cfc580; }
+  .bet-row:last-child { border-bottom: none; }
+  .pm { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; border: 3px solid var(--borderDk); box-shadow: 2px 2px 0 rgba(0,0,0,0.06); background: var(--panel); }
+  .pm:disabled { color: var(--border); border-color: var(--border); cursor: default; background: var(--bg); }
+  .pm.mi { color: var(--red); }
+  .pm.pl { color: var(--field); }
+  .cat-h { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; cursor: pointer; font-family: inherit; background: var(--bg); border: 3px solid var(--border); box-shadow: 3px 3px 0 rgba(0,0,0,0.06); color: var(--text); text-align: left; }
+  .cat-h.op { background: var(--panel); border-color: var(--borderDk); }
+  .cat-b { padding: 4px 16px 8px; background: var(--panel); border: 3px solid var(--borderDk); border-top: none; box-shadow: 3px 3px 0 rgba(0,0,0,0.06); }
+  .sticky { position: sticky; top: 0; z-index: 100; padding: 6px 0 8px; background: linear-gradient(180deg, var(--bg) 0%, var(--bg) 85%, transparent 100%); }
+  .sticky-in { display: flex; justify-content: space-around; align-items: center; padding: 10px 8px; border: 3px solid var(--borderDk); box-shadow: 3px 3px 0 rgba(0,0,0,0.06); background: var(--panel); }
+  .sticky-in.rdy { border-color: var(--field); }
+  .fi { padding: 12px 14px; border: 3px solid var(--borderDk); box-shadow: 3px 3px 0 rgba(0,0,0,0.06); background: var(--panel); color: var(--text); font-size: 13px; letter-spacing: 1px; width: 100%; }
+  .fi::placeholder { color: var(--textDim); }
+  .fi:disabled { opacity: 0.5; background: #d4cfc533; }
+  .sub-btn { width: 100%; max-width: 540px; padding: 16px 24px; font-size: 14px; letter-spacing: 2px; cursor: pointer; border: 3px solid; box-shadow: 3px 3px 0 rgba(0,0,0,0.08); }
+  .sub-btn.go { background: var(--field); color: #fff; border-color: var(--field); }
+  .sub-btn:disabled { background: #d4cfc526; color: var(--textDim); border-color: var(--border); cursor: default; box-shadow: none; }
+  .btm { position: fixed; bottom: 0; left: 0; right: 0; padding: 8px 16px 16px; background: linear-gradient(0deg, var(--bg) 0%, var(--bg) 70%, transparent 100%); display: flex; justify-content: center; z-index: 200; }
+  .pr { display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; border: 3px solid var(--borderDk); box-shadow: 3px 3px 0 rgba(0,0,0,0.06); background: var(--panel); margin-bottom: 6px; }
+  .pd { padding: 8px 16px 12px; background: var(--bg); border: 3px solid; border-top: none; margin-bottom: 6px; }
+  .ab { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; margin-bottom: 4px; border: 3px solid var(--border); box-shadow: 2px 2px 0 rgba(0,0,0,0.04); background: var(--panel); }
+  .ab.hit { border-color: var(--field); background: var(--fieldBg); }
+  .hg { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media(max-width:400px) { .header h1 { font-size: 22px; letter-spacing: 3px; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const API = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+const AC = "sblx2026";
+const TP = 20, MB = 5, BI = 20;
+const VU = "https://venmo.com/u/James-Mason-14?txn=pay&amount=20&note=Super%20Bowl%20Pool%20%F0%9F%8F%88";
+
+const B=[{id:1,cat:"Game Outcome",bet:"Seahawks win",m:1.4},{id:2,cat:"Game Outcome",bet:"Patriots win",m:2.9},{id:3,cat:"Game Outcome",bet:"Total points OVER 45.5",m:1.9},{id:4,cat:"Game Outcome",bet:"Total points UNDER 45.5",m:1.9},{id:5,cat:"Game Outcome",bet:"Seahawks win by 13+",m:3.2},{id:6,cat:"Game Outcome",bet:"Game decided by exactly 3 points",m:5.8},{id:7,cat:"Game Outcome",bet:"Seahawks leading at halftime",m:1.6},{id:8,cat:"Game Outcome",bet:"Patriots leading at halftime",m:3.0},{id:9,cat:"Player Props",bet:"Kenneth Walker III: Over 82.5 rushing yds",m:1.9},{id:10,cat:"Player Props",bet:"Drake Maye: Over 32.5 rushing yds",m:1.9},{id:11,cat:"Player Props",bet:"Jaxon Smith-Njigba: Over 5.5 receptions",m:1.8},{id:12,cat:"Player Props",bet:"Sam Darnold: 3+ touchdown passes",m:4.0},{id:13,cat:"Player Props",bet:"Drake Maye: Over 218.5 passing yds",m:1.9},{id:14,cat:"Player Props",bet:"Both QBs throw an interception",m:3.5},{id:15,cat:"Player Props",bet:"Seahawks under 100 rushing yards",m:3.0},{id:16,cat:"Player Props",bet:"Seahawks over 100 rushing yards",m:1.5},{id:17,cat:"Player Props",bet:"Patriots over 100 rushing yards",m:3.2},{id:18,cat:"Player Props",bet:"Rhamondre Stevenson: Over 49.5 rushing yds",m:1.9},{id:19,cat:"Player Props",bet:"Seahawks record 5+ sacks",m:3.5},{id:20,cat:"Player Props",bet:"Rashid Shaheed anytime TD",m:4.5},{id:21,cat:"Player Props",bet:"Kayshon Boutte anytime TD",m:4.1},{id:22,cat:"First TD Scorer",bet:"Kenneth Walker III scores first TD",m:4.8},{id:23,cat:"First TD Scorer",bet:"Jaxon Smith-Njigba scores first TD",m:6.5},{id:24,cat:"First TD Scorer",bet:"Rhamondre Stevenson scores first TD",m:9.0},{id:25,cat:"First TD Scorer",bet:"Stefon Diggs scores first TD",m:14.0},{id:26,cat:"First TD Scorer",bet:"Hunter Henry scores first TD",m:14.0},{id:27,cat:"First TD Scorer",bet:"Drake Maye scores first TD",m:17.0},{id:28,cat:"First TD Scorer",bet:"AJ Barner scores first TD",m:13.0},{id:29,cat:"MVP",bet:"Sam Darnold wins MVP",m:2.2},{id:30,cat:"MVP",bet:"Drake Maye wins MVP",m:3.3},{id:31,cat:"MVP",bet:"Jaxon Smith-Njigba wins MVP",m:6.5},{id:32,cat:"MVP",bet:"Kenneth Walker III wins MVP",m:9.5},{id:33,cat:"MVP",bet:"Rhamondre Stevenson wins MVP",m:31.0},{id:34,cat:"MVP",bet:"Rashid Shaheed wins MVP",m:46.0},{id:35,cat:"Novelty",bet:"Coin toss: Heads",m:2.0},{id:36,cat:"Novelty",bet:"Coin toss: Tails",m:2.0},{id:37,cat:"Novelty",bet:"National anthem OVER 120 seconds",m:1.9},{id:38,cat:"Novelty",bet:"National anthem UNDER 120 seconds",m:1.9},{id:39,cat:"Novelty",bet:"Player or coach cries during anthem",m:1.4},{id:40,cat:"Gatorade Color",bet:"Orange",m:3.3},{id:41,cat:"Gatorade Color",bet:"Blue",m:3.5},{id:42,cat:"Gatorade Color",bet:"Yellow / Lime / Green",m:3.6},{id:43,cat:"Gatorade Color",bet:"Purple",m:8.0},{id:44,cat:"Gatorade Color",bet:"Red / Pink",m:10.5},{id:45,cat:"Long Shots",bet:"Safety scored in the game",m:10.0},{id:46,cat:"Long Shots",bet:"Scorigami — final score never before in NFL history",m:23.0},{id:47,cat:"Long Shots",bet:"Octopus — same player scores TD + 2-pt conversion",m:16.0},{id:48,cat:"Long Shots",bet:"No touchdown scored in Q1",m:1.8},{id:49,cat:"Long Shots",bet:"First score of the game is a field goal",m:1.7},{id:50,cat:"Long Shots",bet:"Defense or special teams scores a TD",m:8.0}];
+
+const CATS=["Game Outcome","Player Props","First TD Scorer","MVP","Novelty","Gatorade Color","Long Shots"];
+const CI={"Game Outcome":"▶","Player Props":"★","First TD Scorer":"◆","MVP":"♛","Novelty":"♠","Gatorade Color":"●","Long Shots":"⚡"};
+const CD={"Game Outcome":"WHO WINS? BY HOW MUCH?","Player Props":"YARDS, TDS, SACKS","First TD Scorer":"HIGH RISK HIGH REWARD","MVP":"PICK THE HERO","Novelty":"NO FOOTBALL KNOWLEDGE NEEDED","Gatorade Color":"WHAT COLOR GETS DUMPED?","Long Shots":"CHAOS BETS"};
+
+let S={view:'pick',entries:[],results:{},locked:false,al:{},nm:'',tb:'',ex:{},my:null,admin:false,showAd:false,ac:'',loading:true,submitting:false,err:null,ep:null};
+CATS.forEach(c=>S.ex[c]=false);
+
+function mc(m){return m<=2?'bg':m<=4?'by':m<=10?'bo':m<=20?'br':'bp';}
+function mclr(m){return m<=2?'var(--field)':m<=4?'var(--yellow)':m<=10?'var(--orange)':m<=20?'var(--red)':'var(--purple)';}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+async function apiG(){const r=await fetch(API);return r.json();}
+async function apiP(p){const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(p)});return r.json();}
+
+async function load(){
+  try{const d=await apiG();S.entries=d.entries||[];S.results=d.results||{};S.locked=d.locked||false;S.err=null;}
+  catch(e){S.err='FAILED TO LOAD — CHECK CONNECTION';}
+  S.loading=false;R();
+}
+
+function setA(id,v){if(v===0)delete S.al[id];else S.al[id]=v;R();}
+function togC(c){S.ex[c]=!S.ex[c];R();}
+function sw(v){if(v==='scoreboard'){S.view='scoreboard';load();return;}if(v==='pick'&&S.my){S.view='confirmed';R();return;}S.view=v;R();}
+
+async function submit(){
+  const u=Object.values(S.al).reduce((a,b)=>a+b,0),c=Object.values(S.al).filter(v=>v>0).length;
+  if(u!==TP||c<MB||!S.nm.trim()||!S.tb.trim())return;
+  S.submitting=true;S.err=null;R();
+  try{
+    const e={name:S.nm.trim(),tiebreaker:S.tb,allocs:S.al,submittedAt:new Date().toISOString()};
+    const d=await apiP({action:'submit_entry',entry:e});
+    if(d.error==='name_taken'){S.my=d.existing;S.entries=d.entries||S.entries;S.results=d.results||S.results;S.locked=d.locked||false;S.view='confirmed';S.submitting=false;R();return;}
+    if(d.error==='locked'){S.err='SUBMISSIONS ARE LOCKED';S.locked=true;S.submitting=false;R();return;}
+    S.entries=d.entries||[];S.results=d.results||{};S.locked=d.locked||false;S.my=e;S.view='confirmed';S.submitting=false;
+  }catch(e){S.err='SUBMIT FAILED — TRY AGAIN';S.submitting=false;}
+  R();
+}
+
+async function togR(id){try{const d=await apiP({action:'toggle_result',betId:id,adminCode:S.ac||AC});if(!d.error){S.entries=d.entries||[];S.results=d.results||{};S.locked=d.locked||false;}}catch(e){}R();}
+async function togL(){try{const d=await apiP({action:'toggle_lock',adminCode:S.ac||AC});if(!d.error){S.entries=d.entries||[];S.results=d.results||{};S.locked=d.locked||false;}}catch(e){}R();}
+function enterAd(){if(S.ac===AC){S.admin=true;S.showAd=false;R();}else{S.err='WRONG CODE';R();}}
+
+function R(){
+  const a=document.getElementById('app');
+  if(S.loading){a.innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-size:14px;letter-spacing:3px;color:var(--textDim)">LOADING...</div>';return;}
+
+  const u=Object.values(S.al).reduce((a,b)=>a+b,0),c=Object.values(S.al).filter(v=>v>0).length;
+  const l=TP-u,mx=B.reduce((s,b)=>s+(S.al[b.id]||0)*b.m,0);
+  const rdy=l===0&&c>=MB&&S.nm.trim()&&S.tb.trim();
+  const ip=S.view==='pick',ic=S.view==='confirmed',is=S.view==='scoreboard';
+  let h='';
+
+  // Header
+  h+=`<div class="header"><h1>SUPER BOWL LX</h1><div class="sub">SEAHAWKS VS PATRIOTS · SUN FEB 8</div><div class="tabs">
+    <button class="tab ${ip||ic?'on':''}" onclick="sw('pick')">MAKE PICKS</button>
+    <button class="tab ${is?'on':''}" onclick="sw('scoreboard')">SCOREBOARD${S.entries.length?'<span class="ct">'+S.entries.length+'</span>':''}</button>
+  </div></div>`;
+
+  h+='<div class="wrap">';
+  if(S.err)h+=`<div style="padding:12px 16px;border:3px solid var(--red);background:var(--redBg);font-size:11px;color:var(--red);margin-bottom:12px;text-align:center;box-shadow:3px 3px 0 rgba(0,0,0,0.06)">${esc(S.err)}</div>`;
+
+  // Admin
+  if(S.admin){
+    h+=`<div style="padding:14px 16px;border:3px solid #e6a80080;background:var(--yellowBg);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;box-shadow:3px 3px 0 rgba(0,0,0,0.06)">
+      <div><div style="font-size:13px;color:var(--yellow);letter-spacing:2px">⚙ ADMIN MODE</div><div style="font-size:10px;color:var(--textDim);margin-top:4px">MARK WINNERS ON SCOREBOARD</div></div>
+      <div style="display:flex;gap:8px">
+        <button class="bx" style="padding:10px 14px;background:${S.locked?'var(--field)':'var(--red)'};color:#fff;font-size:12px;cursor:pointer;letter-spacing:1px;border:3px solid ${S.locked?'var(--field)':'var(--red)'};box-shadow:2px 2px 0 rgba(0,0,0,0.08)" onclick="togL()">${S.locked?'UNLOCK':'LOCK'}</button>
+        <button class="bx" style="padding:10px 14px;background:var(--panel);color:var(--textDim);font-size:12px;cursor:pointer;letter-spacing:1px;border:3px solid var(--border);box-shadow:2px 2px 0 rgba(0,0,0,0.06)" onclick="S.admin=false;R()">EXIT</button>
+      </div></div>`;
+  } else if(S.showAd){
+    h+=`<div class="bx" style="padding:14px 16px;margin-bottom:16px;display:flex;gap:8px;align-items:center;border:3px solid var(--border);box-shadow:3px 3px 0 rgba(0,0,0,0.06);background:var(--panel)">
+      <input class="fi" type="password" placeholder="CODE" style="flex:1" oninput="S.ac=this.value;S.err=null">
+      <button style="padding:10px 16px;background:var(--field);color:#fff;font-size:12px;cursor:pointer;letter-spacing:1px;border:3px solid var(--field);box-shadow:2px 2px 0 rgba(0,0,0,0.08)" onclick="enterAd()">GO</button>
+      <button style="padding:10px 12px;background:var(--panel);color:var(--textDim);cursor:pointer;font-size:12px;border:3px solid var(--border);box-shadow:2px 2px 0 rgba(0,0,0,0.06)" onclick="S.showAd=false;S.ac='';S.err=null;R()">X</button>
+    </div>`;
+  } else {
+    h+=`<div style="text-align:right;margin-bottom:8px"><button style="padding:8px 14px;background:var(--panel);color:var(--textDim);font-size:10px;cursor:pointer;letter-spacing:1px;border:3px solid var(--border);box-shadow:2px 2px 0 rgba(0,0,0,0.06)" onclick="S.showAd=true;R()">⚙ ADMIN</button></div>`;
+  }
+
+  if(ip) h+=rPick(u,c,l,mx,rdy);
+  else if(ic&&S.my) h+=rConf();
+  else if(is) h+=rScore();
+
+  h+='</div>';
+
+  if(ip){
+    let lbl='▶ LOCK IN MY PICKS ◀',cls=rdy&&!S.locked&&!S.submitting?'sub-btn go':'sub-btn',dis=!rdy||S.locked||S.submitting?'disabled':'';
+    if(S.locked)lbl='>>> LOCKED <<<';
+    else if(S.submitting)lbl='SUBMITTING...';
+    else if(!S.nm.trim())lbl='ENTER YOUR NAME';
+    else if(u<TP)lbl=`${TP-u} PTS LEFT`;
+    else if(u>TP)lbl=`${u-TP} PTS OVER!`;
+    else if(c<MB)lbl=`PICK ${MB}+ BETS`;
+    else if(!S.tb.trim())lbl='ENTER TIEBREAKER';
+    h+=`<div class="btm"><button class="${cls}" ${dis} onclick="submit()">${lbl}</button></div>`;
+  }
+
+  a.innerHTML=h;
+}
+
+function rPick(u,c,l,mx,rdy){
+  let h='';
+  if(S.locked)h+=`<div style="padding:16px;border:3px solid var(--red);background:var(--redBg);margin-bottom:16px;text-align:center;box-shadow:3px 3px 0 rgba(0,0,0,0.06)"><div style="font-size:16px;color:var(--red);letter-spacing:2px">■ PICKS LOCKED ■</div><div style="font-size:11px;color:var(--textDim);margin-top:8px">SUBMISSIONS CLOSED — CHECK SCOREBOARD</div></div>`;
+
+  // How to play
+  h+=`<div style="padding:20px 18px;margin-bottom:18px;border:3px solid var(--field);box-shadow:3px 3px 0 rgba(0,0,0,0.08);background:var(--panel)">
+    <h2 style="font-size:18px;margin:0 0 16px;color:var(--field);letter-spacing:2px;text-align:center">◄ HOW TO PLAY ►</h2>
+    <div class="hg">`;
+  [{i:'$',t:'$20 BUY-IN',d:'EVERYONE PAYS TO JOIN',c:'var(--field)'},{i:'20',t:'20 POINTS',d:'SPREAD ACROSS 50 BETS',c:'var(--blue)'},{i:'5+',t:'MIN 5 BETS',d:'USE ALL 20 POINTS',c:'var(--yellow)'},{i:'×',t:'MULTIPLIERS',d:'PTS × MULT = SCORE',c:'var(--orange)'}].forEach(x=>{
+    h+=`<div style="padding:14px 10px;text-align:center;border:3px solid ${x.c}22;box-shadow:2px 2px 0 rgba(0,0,0,0.04);background:${x.c}08"><div style="font-size:22px;color:${x.c};margin-bottom:6px">${x.i}</div><div style="font-size:11px;color:${x.c};margin-bottom:4px;letter-spacing:1px">${x.t}</div><div style="font-size:10px;color:var(--textDim);line-height:1.6">${x.d}</div></div>`;
+  });
+  h+=`</div>
+    <div style="margin-top:14px;padding:12px 14px;border:3px solid #c8960c66;background:var(--goldBg);box-shadow:2px 2px 0 rgba(0,0,0,0.04)"><div style="font-size:12px;color:var(--gold);margin-bottom:8px;letter-spacing:2px;text-align:center">♛ PAYOUTS ♛</div><div style="font-size:11px;color:var(--textMid);line-height:1.8;text-align:center"><span style="color:var(--field)">8+ ENTRIES:</span> 1ST 70% · 2ND 20% · 3RD 10%<br><span style="color:var(--orange)">7 OR LESS:</span> 1ST 80% · 2ND 20%<br>TIEBREAKER: CLOSEST COMBINED SCORE</div></div>
+    <div style="margin-top:10px;padding:10px 14px;border:3px solid #1b734044;background:var(--fieldBg);box-shadow:2px 2px 0 rgba(0,0,0,0.04)"><div style="font-size:11px;color:var(--field);line-height:1.8;text-align:center">⚡ SAFE BETS (1.4-2x) ADD UP SLOW<br>LONG SHOTS (10x+) WIN BIG OR BUST</div></div>
+    <div style="margin-top:10px;padding:12px 14px;border:3px solid #1565c066;background:var(--blueBg);display:flex;align-items:center;gap:12px;box-shadow:2px 2px 0 rgba(0,0,0,0.04)">
+      <div style="flex:1"><div style="font-size:12px;color:var(--blue);letter-spacing:1px">$20 VIA VENMO</div><div style="font-size:10px;color:var(--textDim);margin-top:4px">PAY BEFORE OR AFTER PICKS</div></div>
+      <a href="${VU}" target="_blank" rel="noopener" style="padding:10px 16px;background:var(--blue);color:#fff;font-size:12px;text-decoration:none;letter-spacing:1px;border:3px solid var(--blue);box-shadow:2px 2px 0 rgba(0,0,0,0.08);display:inline-block">PAY $20</a>
+    </div>
+  </div>`;
+
+  // Step 1
+  h+=`<div style="margin-bottom:14px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="width:34px;height:34px;background:var(--field);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;border:3px solid var(--field);box-shadow:2px 2px 0 rgba(0,0,0,0.08)">1</div><div style="font-size:15px;color:var(--field);letter-spacing:2px">ENTER YOUR INFO</div></div><div style="font-size:11px;color:var(--textDim);line-height:1.9;padding-left:44px">YOUR NAME + TIEBREAKER. TIEBREAKER = COMBINED FINAL SCORE (OT INCLUDED). EX: SEA 27 + NE 24 = ENTER 51.</div></div>`;
+  h+=`<div style="display:flex;gap:10px;margin-bottom:16px"><div style="flex:2"><input class="fi" type="text" placeholder="YOUR NAME" value="${esc(S.nm)}" oninput="S.nm=this.value;S.err=null;R()" ${S.locked?'disabled':''}></div><div style="flex:1.2"><input class="fi" type="number" placeholder="TB (e.g. 47)" value="${esc(S.tb)}" oninput="S.tb=this.value;R()" ${S.locked?'disabled':''}></div></div>`;
+
+  // Step 2
+  h+=`<div style="margin-bottom:14px;margin-top:22px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="width:34px;height:34px;background:var(--field);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;border:3px solid var(--field);box-shadow:2px 2px 0 rgba(0,0,0,0.08)">2</div><div style="font-size:15px;color:var(--field);letter-spacing:2px">PLACE YOUR BETS</div></div><div style="font-size:11px;color:var(--textDim);line-height:1.9;padding-left:44px">SPREAD 20 POINTS ACROSS 5+ BETS. HIGHER MULTIPLIER = BIGGER PAYOFF.</div></div>`;
+
+  // Sticky
+  if(!S.locked){
+    h+=`<div class="sticky"><div class="sticky-in ${rdy?'rdy':''}">`;
+    [{la:'LEFT',v:l,co:l<0?'var(--red)':l===0?'var(--field)':'var(--text)',su:''},{la:'BETS',v:c,co:c>=MB?'var(--field)':'var(--orange)',su:'MIN '+MB},{la:'USED',v:u,co:u>TP?'var(--red)':'var(--text)',su:'OF '+TP},{la:'MAX',v:mx>0?mx.toFixed(1):'--',co:'var(--purple)',su:'IF HIT'}].forEach(x=>{
+      h+=`<div style="text-align:center;min-width:50px"><div style="font-size:10px;color:var(--textDim);letter-spacing:1px;margin-bottom:3px">${x.la}</div><div style="font-size:17px;font-weight:700;line-height:1.1;color:${x.co}">${x.v}</div>${x.su?'<div style="font-size:9px;color:var(--textDim);margin-top:3px">'+x.su+'</div>':''}</div>`;
+    });
+    h+='</div></div>';
+  }
+
+  // Categories
+  CATS.forEach(cat=>{
+    const bs=B.filter(b=>b.cat===cat),cp=bs.reduce((s,b)=>s+(S.al[b.id]||0),0),op=S.ex[cat];
+    const ls=S.locked?'opacity:0.4;pointer-events:none;':'';
+    h+=`<div style="margin-bottom:6px;${ls}"><button class="cat-h ${op?'op':''}" onclick="togC('${cat}')"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:18px;color:var(--field)">${CI[cat]}</span><div><div style="font-size:12px;letter-spacing:2px">${cat.toUpperCase()}</div><div style="font-size:9px;color:var(--textDim);margin-top:3px;letter-spacing:1px">${CD[cat]}</div></div></div><div style="display:flex;align-items:center;gap:8px">${cp>0?'<span style="font-size:11px;color:var(--field);background:var(--fieldBg);padding:4px 8px;border:2px solid #1b734044;letter-spacing:1px">'+cp+'PT</span>':''}<span style="color:var(--textDim);font-size:12px;display:inline-block;transition:transform .15s;transform:rotate(${op?180:0}deg)">▼</span></div></button>`;
+    if(op){
+      h+='<div class="cat-b">';
+      bs.forEach(b=>{
+        const v=S.al[b.id]||0,po=v>0?(v*b.m).toFixed(1):null;
+        h+=`<div class="bet-row"><span class="badge ${mc(b.m)}">${b.m}x</span><div style="flex:1"><div style="font-size:12px;color:var(--text);line-height:1.5">${esc(b.bet)}</div>${po?'<div style="font-size:10px;color:var(--field);margin-top:4px;letter-spacing:1px">→ '+po+' PTS IF HIT</div>':''}</div><div style="display:flex;align-items:center;gap:4px"><button class="pm mi" ${v===0?'disabled':''} onclick="setA(${b.id},${Math.max(0,v-1)})">-</button><span style="width:32px;text-align:center;font-size:18px;font-weight:700;color:${v>0?'var(--field)':'var(--border)'}">${v}</span><button class="pm pl" onclick="setA(${b.id},${v+1})">+</button></div></div>`;
+      });
+      h+='</div>';
+    }
+    h+='</div>';
+  });
+  return h;
+}
+
+function rConf(){
+  const e=S.my,act=B.filter(b=>(e.allocs[b.id]||0)>0).sort((a,b)=>(e.allocs[b.id]||0)*b.m-(e.allocs[a.id]||0)*a.m);
+  const mp=act.reduce((s,b)=>s+(e.allocs[b.id]||0)*b.m,0);
+  const ts=new Date(e.submittedAt).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}).toUpperCase();
+  let h=`<div style="text-align:center;padding:24px 16px;margin-bottom:18px;border:3px solid var(--field);background:var(--fieldBg);box-shadow:3px 3px 0 rgba(0,0,0,0.08)"><div style="font-size:22px;color:var(--field);letter-spacing:3px;margin-bottom:8px">■ PICKS LOCKED ■</div><div style="font-size:13px;color:var(--text);letter-spacing:1px">${esc(e.name).toUpperCase()} — MAX: ${mp.toFixed(1)} PTS</div><div style="font-size:11px;color:var(--textDim);margin-top:8px">TB: ${esc(e.tiebreaker)} · ${ts}</div></div>`;
+  h+=`<div style="padding:16px;margin-bottom:18px;text-align:center;border:3px solid var(--blue);background:var(--blueBg);box-shadow:3px 3px 0 rgba(0,0,0,0.06)"><div style="font-size:13px;color:var(--text);letter-spacing:1px;margin-bottom:10px">DON'T FORGET YOUR $20 BUY-IN!</div><a href="${VU}" target="_blank" rel="noopener" style="display:inline-block;padding:12px 30px;background:var(--blue);color:#fff;font-size:13px;text-decoration:none;letter-spacing:2px;border:3px solid var(--blue);box-shadow:2px 2px 0 rgba(0,0,0,0.08)">PAY $20 ON VENMO</a><div style="font-size:10px;color:var(--textDim);margin-top:8px">OPENS VENMO APP</div></div>`;
+  h+=`<div style="font-size:14px;color:var(--field);letter-spacing:2px;margin-bottom:12px">◄ YOUR PICKS ►</div>`;
+  act.forEach(b=>{
+    const p=e.allocs[b.id];
+    h+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:6px;border:3px solid var(--border);box-shadow:2px 2px 0 rgba(0,0,0,0.06);background:var(--panel)"><span class="badge ${mc(b.m)}">${b.m}x</span><span style="flex:1;font-size:11px">${esc(b.bet).toUpperCase()}</span><div style="text-align:right"><div style="font-size:13px;color:var(--field)">${p}PT</div><div style="font-size:11px;color:var(--blue)">→${(p*b.m).toFixed(1)}</div></div></div>`;
+  });
+  if(!S.locked)h+=`<div style="text-align:center;margin-top:16px"><button style="padding:10px 22px;background:var(--panel);color:var(--textDim);font-size:12px;cursor:pointer;letter-spacing:1px;border:3px solid var(--border);box-shadow:2px 2px 0 rgba(0,0,0,0.06)" onclick="S.my=null;S.view='pick';R()">✏ NEW ENTRY</button></div>`;
+  return h;
+}
+
+function rScore(){
+  const sc=S.entries.map(e=>({...e,score:B.reduce((s,b)=>(!e.allocs[b.id]?s:S.results[b.id]?s+e.allocs[b.id]*b.m:s),0)})).sort((a,b)=>b.score-a.score);
+  const pc=['var(--gold)','var(--silver)','var(--bronze)'],pbg=['var(--goldBg)','var(--silverBg)','var(--bronzeBg)'];
+  let h=`<div style="font-size:20px;color:var(--field);letter-spacing:3px;text-align:center;margin-bottom:6px">♛ SCOREBOARD ♛</div><div style="font-size:11px;color:var(--textDim);text-align:center;margin-bottom:16px">${S.entries.length} ${S.entries.length===1?'ENTRY':'ENTRIES'} · ${Object.keys(S.results).length} WINNERS MARKED</div>`;
+
+  if(S.entries.length>0){
+    const pot=S.entries.length*BI,sp=S.entries.length>=8?[{p:'1ST',pc:.7},{p:'2ND',pc:.2},{p:'3RD',pc:.1}]:[{p:'1ST',pc:.8},{p:'2ND',pc:.2}];
+    const spc={'1ST':'var(--gold)','2ND':'var(--silver)','3RD':'var(--bronze)'},spb={'1ST':'var(--goldBg)','2ND':'var(--silverBg)','3RD':'var(--bronzeBg)'};
+    h+=`<div style="padding:16px;margin-bottom:16px;border:3px solid var(--borderDk);box-shadow:3px 3px 0 rgba(0,0,0,0.06);background:var(--panel)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-size:13px;letter-spacing:2px">PRIZE POOL</div><div style="font-size:22px;color:var(--field);letter-spacing:2px">$${pot}</div></div><div style="display:flex;gap:8px">`;
+    sp.forEach(s=>{h+=`<div style="flex:1;padding:12px 8px;text-align:center;border:3px solid ${spc[s.p]}66;background:${spb[s.p]}"><div style="font-size:11px;color:${spc[s.p]};letter-spacing:1px">${s.p}</div><div style="font-size:20px;color:${spc[s.p]};margin-top:2px">$${Math.round(pot*s.pc)}</div><div style="font-size:10px;color:var(--textDim);margin-top:2px">${Math.round(s.pc*100)}%</div></div>`;});
+    h+=`</div><div style="font-size:10px;color:var(--textDim);text-align:center;margin-top:10px">${S.entries.length} ${S.entries.length===1?'ENTRY':'ENTRIES'} × $${BI}${S.entries.length<8?' · 3RD PLACE AT 8+ ENTRIES':''}</div></div>`;
+  }
+
+  if(sc.length===0){h+=`<div style="padding:32px 16px;text-align:center;border:3px solid var(--border);box-shadow:3px 3px 0 rgba(0,0,0,0.06);background:var(--panel)"><div style="font-size:15px;color:var(--textDim);letter-spacing:2px">NO ENTRIES YET</div><div style="font-size:11px;color:var(--textDim);margin-top:10px">SHARE THE LINK!</div></div>`;}
+  else{sc.forEach((e,i)=>{
+    const op=S.ep===e.name+i,ab=B.filter(b=>(e.allocs[b.id]||0)>0);
+    const ts=new Date(e.submittedAt).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}).toUpperCase();
+    const co=i<3?pc[i]:'var(--borderDk)',bg=i<3?pbg[i]:'var(--panel)';
+    h+=`<div class="pr" style="border-color:${co};background:${bg}" onclick="S.ep=S.ep==='${e.name+i}'?null:'${e.name+i}';R()">
+      <div style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border:3px solid ${co};box-shadow:2px 2px 0 rgba(0,0,0,0.06);background:${i<3?co:'var(--bg)'};color:${i<3?'#fff':'var(--textDim)'}">${i+1}</div>
+      <div style="flex:1"><div style="font-size:13px;letter-spacing:1px">${esc(e.name).toUpperCase()}</div><div style="font-size:10px;color:var(--textDim);margin-top:3px">TB:${esc(e.tiebreaker)} · ${ab.length} BETS · ${ts}</div></div>
+      <div style="font-size:20px;color:${i===0?'var(--field)':'var(--text)'};letter-spacing:1px">${e.score.toFixed(1)}</div>
+      <span style="color:var(--textDim);font-size:12px;display:inline-block;transition:transform .15s;transform:rotate(${op?180:0}deg)">▼</span>
+    </div>`;
+    if(op){
+      h+=`<div class="pd" style="border-color:${co}">`;
+      ab.sort((a,b)=>(e.allocs[b.id]||0)*b.m-(e.allocs[a.id]||0)*a.m).forEach(b=>{
+        const p=e.allocs[b.id],hi=!!S.results[b.id];
+        h+=`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #d4cfc580;opacity:${hi?1:.4}"><span style="font-size:14px;width:20px;text-align:center;color:${hi?'var(--field)':'var(--textDim)'}">${hi?'■':'□'}</span><span class="badge ${mc(b.m)}">${b.m}x</span><span style="flex:1;font-size:11px">${esc(b.bet).toUpperCase()}</span><span style="font-size:12px;color:${hi?'var(--field)':'var(--textDim)'}">${p}→${hi?(p*b.m).toFixed(1):'0'}</span></div>`;
+      });
+      h+='</div>';
+    }
+  });}
+
+  if(S.admin){
+    h+=`<div style="font-size:15px;color:var(--field);letter-spacing:2px;text-align:center;margin:22px 0 12px;padding-top:12px;border-top:3px solid var(--border)">⚙ MARK WINNERS ⚙</div>`;
+    CATS.forEach(cat=>{
+      const bs=B.filter(b=>b.cat===cat);
+      h+=`<div style="margin-bottom:14px"><div style="font-size:11px;color:var(--textDim);letter-spacing:2px;margin-bottom:8px;padding-left:4px">${CI[cat]} ${cat.toUpperCase()}</div>`;
+      bs.forEach(b=>{
+        const hi=!!S.results[b.id],bc=S.entries.filter(e=>(e.allocs[b.id]||0)>0).length;
+        h+=`<div class="ab ${hi?'hit':''}" onclick="togR(${b.id})"><div style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;border:3px solid ${hi?'var(--field)':'var(--border)'};background:${hi?'var(--field)':'var(--bg)'};color:${hi?'#fff':'transparent'};font-size:14px">${hi?'■':''}</div><span class="badge ${mc(b.m)}">${b.m}x</span><span style="flex:1;font-size:11px">${esc(b.bet).toUpperCase()}</span>${bc>0?'<span style="font-size:11px;color:var(--textDim);background:var(--bg);padding:3px 8px;border:1px solid var(--border)">'+bc+'</span>':''}</div>`;
+      });
+      h+='</div>';
+    });
+  }
+  return h;
+}
+
+load();
+</script>
+</body>
+</html>
