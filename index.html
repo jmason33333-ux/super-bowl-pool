@@ -6,7 +6,7 @@
 <title>Super Bowl LX Pool</title>
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
   :root {
     --bg: #f4f1eb; --panel: #ffffff; --border: #d4cfc5; --borderDk: #b0a898;
     --text: #1a1a1a; --textMid: #444444; --textDim: #777777;
@@ -16,10 +16,10 @@
     --gold: #c8960c; --goldBg: #fdf4dc; --silver: #607d8b; --silverBg: #eceff1;
     --bronze: #bf5b17; --bronzeBg: #fff3e0;
   }
-  body { background: var(--bg); font-family: 'Silkscreen','Courier New',monospace; color: var(--text); -webkit-font-smoothing: antialiased; }
-  button { font-family: inherit; border: none; outline: none; }
-  input { font-family: inherit; border: none; outline: none; }
-  a { font-family: inherit; }
+  body { background: var(--bg); font-family: 'Silkscreen','Courier New',monospace; color: var(--text); -webkit-font-smoothing: antialiased; touch-action: manipulation; }
+  button { font-family: inherit; border: none; outline: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; }
+  input { font-family: inherit; border: none; outline: none; touch-action: manipulation; }
+  a { font-family: inherit; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   body::before {
     content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     pointer-events: none; z-index: 0; opacity: 0.018;
@@ -90,7 +90,7 @@ const CI={"Game Outcome":"▶","Player Props":"★","First TD Scorer":"◆","MVP
 const CD={"Game Outcome":"WHO WINS? BY HOW MUCH?","Player Props":"YARDS, TDS, SACKS","First TD Scorer":"HIGH RISK HIGH REWARD","MVP":"PICK THE HERO","Novelty":"NO FOOTBALL KNOWLEDGE NEEDED","Gatorade Color":"WHAT COLOR GETS DUMPED?","Long Shots":"CHAOS BETS"};
 
 let S={view:'pick',entries:[],results:{},locked:false,al:{},nm:'',tb:'',ex:{},my:null,admin:false,showAd:false,ac:'',loading:true,submitting:false,err:null,ep:null};
-CATS.forEach(c=>S.ex[c]=false);
+CATS.forEach(c=>S.ex[c]=true);
 
 function mc(m){return m<=2?'bg':m<=4?'by':m<=10?'bo':m<=20?'br':'bp';}
 function mclr(m){return m<=2?'var(--field)':m<=4?'var(--yellow)':m<=10?'var(--orange)':m<=20?'var(--red)':'var(--purple)';}
@@ -105,9 +105,12 @@ async function load(){
   S.loading=false;R();
 }
 
-function setA(id,v){if(v===0)delete S.al[id];else S.al[id]=v;R();}
+function setA(id,v){var cur=S.al[id]||0;if(v>cur){var u=Object.values(S.al).reduce(function(a,b){return a+b;},0);if(u>=TP)return;}if(v===0)delete S.al[id];else S.al[id]=v;R();}
 function togC(c){S.ex[c]=!S.ex[c];R();}
 function sw(v){if(v==='scoreboard'){S.view='scoreboard';load();return;}if(v==='pick'&&S.my){S.view='confirmed';R();return;}S.view=v;R();}
+function onNm(el){S.nm=el.value;S.err=null;var e=document.getElementById('err-msg');if(e)e.style.display='none';updateBtn();}
+function onTb(el){S.tb=el.value;updateBtn();}
+function updateBtn(){var btn=document.getElementById('submit-btn');if(!btn)return;var u=Object.values(S.al).reduce(function(a,b){return a+b;},0),c=Object.values(S.al).filter(function(v){return v>0;}).length;var rdy=u===TP&&c>=MB&&S.nm.trim()&&S.tb.trim();var lbl='\u25b6 LOCK IN MY PICKS \u25c0';if(S.locked)lbl='>>> LOCKED <<<';else if(S.submitting)lbl='SUBMITTING...';else if(!S.nm.trim())lbl='ENTER YOUR NAME';else if(u<TP)lbl=(TP-u)+' PTS LEFT';else if(u>TP)lbl=(u-TP)+' PTS OVER!';else if(c<MB)lbl='PICK '+MB+'+ BETS';else if(!S.tb.trim())lbl='ENTER TIEBREAKER';btn.textContent=lbl;btn.disabled=!rdy||S.locked||S.submitting;btn.className=rdy&&!S.locked&&!S.submitting?'sub-btn go':'sub-btn';var si=document.querySelector('.sticky-in');if(si)si.className='sticky-in'+(rdy?' rdy':'');}
 
 async function submit(){
   const u=Object.values(S.al).reduce((a,b)=>a+b,0),c=Object.values(S.al).filter(v=>v>0).length;
@@ -144,7 +147,7 @@ function R(){
   </div></div>`;
 
   h+='<div class="wrap">';
-  if(S.err)h+=`<div style="padding:12px 16px;border:3px solid var(--red);background:var(--redBg);font-size:11px;color:var(--red);margin-bottom:12px;text-align:center;box-shadow:3px 3px 0 rgba(0,0,0,0.06)">${esc(S.err)}</div>`;
+  if(S.err)h+=`<div id="err-msg" style="padding:12px 16px;border:3px solid var(--red);background:var(--redBg);font-size:11px;color:var(--red);margin-bottom:12px;text-align:center;box-shadow:3px 3px 0 rgba(0,0,0,0.06)">${esc(S.err)}</div>`;
 
   // Admin
   if(S.admin){
@@ -179,7 +182,7 @@ function R(){
     else if(u>TP)lbl=`${u-TP} PTS OVER!`;
     else if(c<MB)lbl=`PICK ${MB}+ BETS`;
     else if(!S.tb.trim())lbl='ENTER TIEBREAKER';
-    h+=`<div class="btm"><button class="${cls}" ${dis} onclick="submit()">${lbl}</button></div>`;
+    h+=`<div class="btm"><button id="submit-btn" class="${cls}" ${dis} onclick="submit()">${lbl}</button></div>`;
   }
 
   a.innerHTML=h;
@@ -207,7 +210,7 @@ function rPick(u,c,l,mx,rdy){
 
   // Step 1
   h+=`<div style="margin-bottom:14px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="width:34px;height:34px;background:var(--field);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;border:3px solid var(--field);box-shadow:2px 2px 0 rgba(0,0,0,0.08)">1</div><div style="font-size:15px;color:var(--field);letter-spacing:2px">ENTER YOUR INFO</div></div><div style="font-size:11px;color:var(--textDim);line-height:1.9;padding-left:44px">YOUR NAME + TIEBREAKER. TIEBREAKER = COMBINED FINAL SCORE (OT INCLUDED). EX: SEA 27 + NE 24 = ENTER 51.</div></div>`;
-  h+=`<div style="display:flex;gap:10px;margin-bottom:16px"><div style="flex:2"><input class="fi" type="text" placeholder="YOUR NAME" value="${esc(S.nm)}" oninput="S.nm=this.value;S.err=null;R()" ${S.locked?'disabled':''}></div><div style="flex:1.2"><input class="fi" type="number" placeholder="TB (e.g. 47)" value="${esc(S.tb)}" oninput="S.tb=this.value;R()" ${S.locked?'disabled':''}></div></div>`;
+  h+=`<div style="display:flex;gap:10px;margin-bottom:16px"><div style="flex:2"><input class="fi" type="text" placeholder="YOUR NAME" value="${esc(S.nm)}" oninput="onNm(this)" ${S.locked?'disabled':''}></div><div style="flex:1.2"><input class="fi" type="number" placeholder="TB (e.g. 47)" value="${esc(S.tb)}" oninput="onTb(this)" ${S.locked?'disabled':''}></div></div>`;
 
   // Step 2
   h+=`<div style="margin-bottom:14px;margin-top:22px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="width:34px;height:34px;background:var(--field);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;border:3px solid var(--field);box-shadow:2px 2px 0 rgba(0,0,0,0.08)">2</div><div style="font-size:15px;color:var(--field);letter-spacing:2px">PLACE YOUR BETS</div></div><div style="font-size:11px;color:var(--textDim);line-height:1.9;padding-left:44px">SPREAD 20 POINTS ACROSS 5+ BETS. HIGHER MULTIPLIER = BIGGER PAYOFF.</div></div>`;
@@ -230,7 +233,7 @@ function rPick(u,c,l,mx,rdy){
       h+='<div class="cat-b">';
       bs.forEach(b=>{
         const v=S.al[b.id]||0,po=v>0?(v*b.m).toFixed(1):null;
-        h+=`<div class="bet-row"><span class="badge ${mc(b.m)}">${b.m}x</span><div style="flex:1"><div style="font-size:12px;color:var(--text);line-height:1.5">${esc(b.bet)}</div>${po?'<div style="font-size:10px;color:var(--field);margin-top:4px;letter-spacing:1px">→ '+po+' PTS IF HIT</div>':''}</div><div style="display:flex;align-items:center;gap:4px"><button class="pm mi" ${v===0?'disabled':''} onclick="setA(${b.id},${Math.max(0,v-1)})">-</button><span style="width:32px;text-align:center;font-size:18px;font-weight:700;color:${v>0?'var(--field)':'var(--border)'}">${v}</span><button class="pm pl" onclick="setA(${b.id},${v+1})">+</button></div></div>`;
+        h+=`<div class="bet-row"><span class="badge ${mc(b.m)}">${b.m}x</span><div style="flex:1"><div style="font-size:12px;color:var(--text);line-height:1.5">${esc(b.bet)}</div>${po?'<div style="font-size:10px;color:var(--field);margin-top:4px;letter-spacing:1px">→ '+po+' PTS IF HIT</div>':''}</div><div style="display:flex;align-items:center;gap:4px"><button class="pm mi" ${v===0?'disabled':''} onclick="setA(${b.id},${Math.max(0,v-1)})">-</button><span style="width:32px;text-align:center;font-size:18px;font-weight:700;color:${v>0?'var(--field)':'var(--border)'}">${v}</span><button class="pm pl" ${u>=TP?'disabled':''} onclick="setA(${b.id},${v+1})">+</button></div></div>`;
       });
       h+='</div>';
     }
