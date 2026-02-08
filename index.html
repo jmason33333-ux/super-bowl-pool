@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -110,6 +111,7 @@ function setA(id,v){
   const u=Object.values(S.al).reduce((a,b)=>a+b,0);
   const c=Object.values(S.al).filter(v=>v>0).length;
   const mx=B.reduce((s,b)=>s+(S.al[b.id]||0)*b.m,0);
+  const bet = B.find(b => b.id === id);
   
   // Update sticky bar
   const stickyEl = document.querySelector('.sticky-in');
@@ -129,21 +131,15 @@ function setA(id,v){
   }
   
   // Update category point totals
-  const bet = B.find(b => b.id === id);
   if(bet) {
     const catBets = B.filter(b => b.cat === bet.cat);
     const catPoints = catBets.reduce((s,b) => s+(S.al[b.id]||0), 0);
     const catHeaders = document.querySelectorAll('.cat-h');
     catHeaders.forEach(header => {
       if(header.textContent.includes(bet.cat.toUpperCase())) {
-        const pointsSpan = header.querySelector('span[style*="fieldBg"]');
         const rightDiv = header.children[1];
         if(catPoints > 0) {
-          if(!pointsSpan) {
-            rightDiv.innerHTML = '<span style="font-size:11px;color:var(--field);background:var(--fieldBg);padding:4px 8px;border:2px solid #1b734044;letter-spacing:1px">'+catPoints+'PT</span>';
-          } else {
-            pointsSpan.textContent = catPoints + 'PT';
-          }
+          rightDiv.innerHTML = '<span style="font-size:11px;color:var(--field);background:var(--fieldBg);padding:4px 8px;border:2px solid #1b734044;letter-spacing:1px">'+catPoints+'PT</span>';
         } else {
           rightDiv.innerHTML = '';
         }
@@ -151,29 +147,45 @@ function setA(id,v){
     });
   }
   
-  // Update the specific bet row
+  // Update the specific bet row - find by checking onclick attribute
   const betRows = document.querySelectorAll('.bet-row');
   betRows.forEach(row => {
     const minusBtn = row.querySelector('.pm.mi');
     const plusBtn = row.querySelector('.pm.pl');
-    if(minusBtn && minusBtn.onclick && minusBtn.onclick.toString().includes('setA('+id+',')) {
-      const valueSpan = row.children[2].children[1];
-      const detailDiv = row.children[1].children[1];
-      const bet = B.find(b => b.id === id);
+    if(plusBtn && plusBtn.getAttribute('onclick') && plusBtn.getAttribute('onclick').includes('setA('+id+',')) {
+      // Found the right row
+      const valueSpan = row.querySelector('span[style*="width:32px"]');
+      const textDiv = row.querySelector('div[style*="flex:1"]');
       
-      valueSpan.textContent = v;
-      valueSpan.style.color = v > 0 ? 'var(--field)' : 'var(--border)';
-      minusBtn.disabled = v === 0;
+      // Update value display
+      if(valueSpan) {
+        valueSpan.textContent = v;
+        valueSpan.style.color = v > 0 ? 'var(--field)' : 'var(--border)';
+      }
       
-      if(v > 0) {
-        const po = (v * bet.m).toFixed(1);
-        if(detailDiv) {
-          detailDiv.innerHTML = '<div style="font-size:10px;color:var(--field);margin-top:4px;letter-spacing:1px">→ '+po+' PTS IF HIT</div>';
+      // Update minus button state
+      if(minusBtn) {
+        minusBtn.disabled = v === 0;
+      }
+      
+      // Update points display
+      if(textDiv) {
+        const existingDetail = textDiv.querySelector('div[style*="font-size:10px"]');
+        if(v > 0) {
+          const po = (v * bet.m).toFixed(1);
+          if(existingDetail) {
+            existingDetail.innerHTML = '<div style="font-size:10px;color:var(--field);margin-top:4px;letter-spacing:1px">→ '+po+' PTS IF HIT</div>';
+          } else {
+            const mainDiv = textDiv.querySelector('div[style*="font-size:12px"]');
+            if(mainDiv) {
+              mainDiv.insertAdjacentHTML('afterend', '<div style="font-size:10px;color:var(--field);margin-top:4px;letter-spacing:1px">→ '+po+' PTS IF HIT</div>');
+            }
+          }
         } else {
-          row.children[1].innerHTML += '<div style="font-size:10px;color:var(--field);margin-top:4px;letter-spacing:1px">→ '+po+' PTS IF HIT</div>';
+          if(existingDetail) {
+            existingDetail.remove();
+          }
         }
-      } else {
-        if(detailDiv) detailDiv.remove();
       }
     }
   });
