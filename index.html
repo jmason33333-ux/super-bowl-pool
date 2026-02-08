@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="HandheldFriendly" content="true">
 <title>Super Bowl LX Pool</title>
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -17,10 +18,10 @@
     --bronze: #bf5b17; --bronzeBg: #fff3e0;
   }
   body { background: var(--bg); font-family: 'Silkscreen','Courier New',monospace; color: var(--text); -webkit-font-smoothing: antialiased; touch-action: manipulation; }
-  button, a, input, select, textarea, label { touch-action: manipulation; }
-  button { font-family: inherit; border: none; outline: none; }
+  button, a, input, select, textarea, label { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  button { font-family: inherit; border: none; outline: none; user-select: none; }
   input { font-family: inherit; border: none; outline: none; }
-  a { font-family: inherit; }
+  a { font-family: inherit; user-select: none; }
   body::before {
     content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     pointer-events: none; z-index: 0; opacity: 0.018;
@@ -50,12 +51,11 @@
   .bp { color: var(--purple); border-color: var(--purple); background: #6a1b9a14; }
   .bet-row { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid #d4cfc580; }
   .bet-row:last-child { border-bottom: none; }
-  .pm { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; border: 3px solid var(--borderDk); box-shadow: 2px 2px 0 rgba(0,0,0,0.06); background: var(--panel); }
+  .pm { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; border: 3px solid var(--borderDk); box-shadow: 2px 2px 0 rgba(0,0,0,0.06); background: var(--panel); touch-action: manipulation; user-select: none; }
   .pm:disabled { color: var(--border); border-color: var(--border); cursor: default; background: var(--bg); }
   .pm.mi { color: var(--red); }
   .pm.pl { color: var(--field); }
-  .cat-h { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; cursor: pointer; font-family: inherit; background: var(--bg); border: 3px solid var(--border); box-shadow: 3px 3px 0 rgba(0,0,0,0.06); color: var(--text); text-align: left; }
-  .cat-h.op { background: var(--panel); border-color: var(--borderDk); }
+  .cat-h { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--panel); border: 3px solid var(--borderDk); box-shadow: 3px 3px 0 rgba(0,0,0,0.06); color: var(--text); }
   .cat-b { padding: 4px 16px 8px; background: var(--panel); border: 3px solid var(--borderDk); border-top: none; box-shadow: 3px 3px 0 rgba(0,0,0,0.06); }
   .sticky { position: sticky; top: 0; z-index: 100; padding: 6px 0 8px; background: linear-gradient(180deg, var(--bg) 0%, var(--bg) 85%, transparent 100%); }
   .sticky-in { display: flex; justify-content: space-around; align-items: center; padding: 10px 8px; border: 3px solid var(--borderDk); box-shadow: 3px 3px 0 rgba(0,0,0,0.06); background: var(--panel); }
@@ -83,14 +83,13 @@ const AC = "sblx2026";
 const TP = 20, MB = 5, BI = 20;
 const VU = "https://venmo.com/u/James-Mason-14?txn=pay&amount=20&note=Super%20Bowl%20Pool%20%F0%9F%8F%88";
 
-const B=[{id:1,cat:"Game Outcome",bet:"Seahawks win",m:1.4},{id:2,cat:"Game Outcome",bet:"Patriots win",m:2.9},{id:3,cat:"Game Outcome",bet:"Total points OVER 45.5",m:1.9},{id:4,cat:"Game Outcome",bet:"Total points UNDER 45.5",m:1.9},{id:5,cat:"Game Outcome",bet:"Seahawks win by 13+",m:3.2},{id:6,cat:"Game Outcome",bet:"Game decided by exactly 3 points",m:5.8},{id:7,cat:"Game Outcome",bet:"Seahawks leading at halftime",m:1.6},{id:8,cat:"Game Outcome",bet:"Patriots leading at halftime",m:3.0},{id:9,cat:"Player Props",bet:"Kenneth Walker III: Over 82.5 rushing yds",m:1.9},{id:10,cat:"Player Props",bet:"Drake Maye: Over 32.5 rushing yds",m:1.9},{id:11,cat:"Player Props",bet:"Jaxon Smith-Njigba: Over 5.5 receptions",m:1.8},{id:12,cat:"Player Props",bet:"Sam Darnold: 3+ touchdown passes",m:4.0},{id:13,cat:"Player Props",bet:"Drake Maye: Over 218.5 passing yds",m:1.9},{id:14,cat:"Player Props",bet:"Both QBs throw an interception",m:3.5},{id:15,cat:"Player Props",bet:"Seahawks under 100 rushing yards",m:3.0},{id:16,cat:"Player Props",bet:"Seahawks over 100 rushing yards",m:1.5},{id:17,cat:"Player Props",bet:"Patriots over 100 rushing yards",m:3.2},{id:18,cat:"Player Props",bet:"Rhamondre Stevenson: Over 49.5 rushing yds",m:1.9},{id:19,cat:"Player Props",bet:"Seahawks record 5+ sacks",m:3.5},{id:20,cat:"Player Props",bet:"Rashid Shaheed anytime TD",m:4.5},{id:21,cat:"Player Props",bet:"Kayshon Boutte anytime TD",m:4.1},{id:22,cat:"First TD Scorer",bet:"Kenneth Walker III scores first TD",m:4.8},{id:23,cat:"First TD Scorer",bet:"Jaxon Smith-Njigba scores first TD",m:6.5},{id:24,cat:"First TD Scorer",bet:"Rhamondre Stevenson scores first TD",m:9.0},{id:25,cat:"First TD Scorer",bet:"Stefon Diggs scores first TD",m:14.0},{id:26,cat:"First TD Scorer",bet:"Hunter Henry scores first TD",m:14.0},{id:27,cat:"First TD Scorer",bet:"Drake Maye scores first TD",m:17.0},{id:28,cat:"First TD Scorer",bet:"AJ Barner scores first TD",m:13.0},{id:29,cat:"MVP",bet:"Sam Darnold wins MVP",m:2.2},{id:30,cat:"MVP",bet:"Drake Maye wins MVP",m:3.3},{id:31,cat:"MVP",bet:"Jaxon Smith-Njigba wins MVP",m:6.5},{id:32,cat:"MVP",bet:"Kenneth Walker III wins MVP",m:9.5},{id:33,cat:"MVP",bet:"Rhamondre Stevenson wins MVP",m:31.0},{id:34,cat:"MVP",bet:"Rashid Shaheed wins MVP",m:46.0},{id:35,cat:"Novelty",bet:"Coin toss: Heads",m:2.0},{id:36,cat:"Novelty",bet:"Coin toss: Tails",m:2.0},{id:37,cat:"Novelty",bet:"National anthem OVER 120 seconds",m:1.9},{id:38,cat:"Novelty",bet:"National anthem UNDER 120 seconds",m:1.9},{id:39,cat:"Novelty",bet:"Player or coach cries during anthem",m:1.4},{id:40,cat:"Gatorade Color",bet:"Orange",m:3.3},{id:41,cat:"Gatorade Color",bet:"Blue",m:3.5},{id:42,cat:"Gatorade Color",bet:"Yellow / Lime / Green",m:3.6},{id:43,cat:"Gatorade Color",bet:"Purple",m:8.0},{id:44,cat:"Gatorade Color",bet:"Red / Pink",m:10.5},{id:45,cat:"Long Shots",bet:"Safety scored in the game",m:10.0},{id:46,cat:"Long Shots",bet:"Scorigami \u2014 final score never before in NFL history",m:23.0},{id:47,cat:"Long Shots",bet:"Octopus \u2014 same player scores TD + 2-pt conversion",m:16.0},{id:48,cat:"Long Shots",bet:"No touchdown scored in Q1",m:1.8},{id:49,cat:"Long Shots",bet:"First score of the game is a field goal",m:1.7},{id:50,cat:"Long Shots",bet:"Defense or special teams scores a TD",m:8.0}];
+const B=[{id:1,cat:"Game Outcome",bet:"Seahawks win",m:1.4},{id:2,cat:"Game Outcome",bet:"Patriots win",m:2.9},{id:3,cat:"Game Outcome",bet:"Total points OVER 45.5",m:1.9},{id:4,cat:"Game Outcome",bet:"Total points UNDER 45.5",m:1.9},{id:5,cat:"Game Outcome",bet:"Seahawks win by 13+",m:3.2},{id:6,cat:"Game Outcome",bet:"Game decided by exactly 3 points",m:5.8},{id:7,cat:"Game Outcome",bet:"Seahawks leading at halftime",m:1.6},{id:8,cat:"Game Outcome",bet:"Patriots leading at halftime",m:3.0},{id:9,cat:"Player Props",bet:"Kenneth Walker III: Over 82.5 rushing yds",m:1.9},{id:10,cat:"Player Props",bet:"Drake Maye: Over 32.5 rushing yds",m:1.9},{id:11,cat:"Player Props",bet:"Jaxon Smith-Njigba: Over 5.5 receptions",m:1.8},{id:12,cat:"Player Props",bet:"Sam Darnold: 3+ touchdown passes",m:4.0},{id:13,cat:"Player Props",bet:"Drake Maye: Over 218.5 passing yds",m:1.9},{id:14,cat:"Player Props",bet:"Both QBs throw an interception",m:3.5},{id:15,cat:"Player Props",bet:"Seahawks under 100 rushing yards",m:3.0},{id:16,cat:"Player Props",bet:"Seahawks over 100 rushing yards",m:1.5},{id:17,cat:"Player Props",bet:"Patriots over 100 rushing yards",m:3.2},{id:18,cat:"Player Props",bet:"Rhamondre Stevenson: Over 49.5 rushing yds",m:1.9},{id:19,cat:"Player Props",bet:"Seahawks record 5+ sacks",m:3.5},{id:20,cat:"Player Props",bet:"Rashid Shaheed anytime TD",m:4.5},{id:21,cat:"Player Props",bet:"Kayshon Boutte anytime TD",m:4.1},{id:22,cat:"First TD Scorer",bet:"Kenneth Walker III scores first TD",m:4.8},{id:23,cat:"First TD Scorer",bet:"Jaxon Smith-Njigba scores first TD",m:6.5},{id:24,cat:"First TD Scorer",bet:"Rhamondre Stevenson scores first TD",m:9.0},{id:25,cat:"First TD Scorer",bet:"Stefon Diggs scores first TD",m:14.0},{id:26,cat:"First TD Scorer",bet:"Hunter Henry scores first TD",m:14.0},{id:27,cat:"First TD Scorer",bet:"Drake Maye scores first TD",m:17.0},{id:28,cat:"First TD Scorer",bet:"AJ Barner scores first TD",m:13.0},{id:29,cat:"MVP",bet:"Sam Darnold wins MVP",m:2.2},{id:30,cat:"MVP",bet:"Drake Maye wins MVP",m:3.3},{id:31,cat:"MVP",bet:"Jaxon Smith-Njigba wins MVP",m:6.5},{id:32,cat:"MVP",bet:"Kenneth Walker III wins MVP",m:9.5},{id:33,cat:"MVP",bet:"Rhamondre Stevenson wins MVP",m:31.0},{id:34,cat:"MVP",bet:"Rashid Shaheed wins MVP",m:46.0},{id:35,cat:"Novelty",bet:"Coin toss: Heads",m:2.0},{id:36,cat:"Novelty",bet:"Coin toss: Tails",m:2.0},{id:37,cat:"Novelty",bet:"National anthem OVER 120 seconds",m:1.9},{id:38,cat:"Novelty",bet:"National anthem UNDER 120 seconds",m:1.9},{id:39,cat:"Novelty",bet:"Player or coach cries during anthem",m:1.4},{id:40,cat:"Gatorade Color",bet:"Orange",m:3.3},{id:41,cat:"Gatorade Color",bet:"Blue",m:3.5},{id:42,cat:"Gatorade Color",bet:"Yellow / Lime / Green",m:3.6},{id:43,cat:"Gatorade Color",bet:"Purple",m:8.0},{id:44,cat:"Gatorade Color",bet:"Red / Pink",m:10.5},{id:45,cat:"Long Shots",bet:"Safety scored in the game",m:10.0},{id:46,cat:"Long Shots",bet:"Scorigami — final score never before in NFL history",m:23.0},{id:47,cat:"Long Shots",bet:"Octopus — same player scores TD + 2-pt conversion",m:16.0},{id:48,cat:"Long Shots",bet:"No touchdown scored in Q1",m:1.8},{id:49,cat:"Long Shots",bet:"First score of the game is a field goal",m:1.7},{id:50,cat:"Long Shots",bet:"Defense or special teams scores a TD",m:8.0}];
 
 const CATS=["Game Outcome","Player Props","First TD Scorer","MVP","Novelty","Gatorade Color","Long Shots"];
-const CI={"Game Outcome":"\u25b6","Player Props":"\u2605","First TD Scorer":"\u25c6","MVP":"\u265b","Novelty":"\u2660","Gatorade Color":"\u25cf","Long Shots":"\u26a1"};
+const CI={"Game Outcome":"▶","Player Props":"★","First TD Scorer":"◆","MVP":"♛","Novelty":"♠","Gatorade Color":"●","Long Shots":"⚡"};
 const CD={"Game Outcome":"WHO WINS? BY HOW MUCH?","Player Props":"YARDS, TDS, SACKS","First TD Scorer":"HIGH RISK HIGH REWARD","MVP":"PICK THE HERO","Novelty":"NO FOOTBALL KNOWLEDGE NEEDED","Gatorade Color":"WHAT COLOR GETS DUMPED?","Long Shots":"CHAOS BETS"};
 
-let S={view:'pick',entries:[],results:{},locked:false,al:{},nm:'',tb:'',ex:{},my:null,admin:false,showAd:false,ac:'',loading:true,submitting:false,err:null,ep:null};
-CATS.forEach(c=>S.ex[c]=true);
+let S={view:'pick',entries:[],results:{},locked:false,al:{},nm:'',tb:'',my:null,admin:false,showAd:false,ac:'',loading:true,submitting:false,err:null,ep:null};
 
 function mc(m){return m<=2?'bg':m<=4?'by':m<=10?'bo':m<=20?'br':'bp';}
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
@@ -100,12 +99,87 @@ async function apiP(p){const r=await fetch(API,{method:'POST',headers:{'Content-
 
 async function load(){
   try{const d=await apiG();S.entries=d.entries||[];S.results=d.results||{};S.locked=d.locked||false;S.err=null;}
-  catch(e){S.err='FAILED TO LOAD \u2014 CHECK CONNECTION';}
+  catch(e){S.err='FAILED TO LOAD — CHECK CONNECTION';}
   S.loading=false;R();
 }
 
-function setA(id,v){if(v===0)delete S.al[id];else S.al[id]=v;R();}
-function togC(c){S.ex[c]=!S.ex[c];R();}
+function setA(id,v){
+  if(v===0)delete S.al[id];else S.al[id]=v;
+  
+  // Update only the affected bet row display
+  const u=Object.values(S.al).reduce((a,b)=>a+b,0);
+  const c=Object.values(S.al).filter(v=>v>0).length;
+  const mx=B.reduce((s,b)=>s+(S.al[b.id]||0)*b.m,0);
+  
+  // Update sticky bar
+  const stickyEl = document.querySelector('.sticky-in');
+  if(stickyEl) {
+    const l = TP - u;
+    const rdy = l===0 && c>=MB && S.nm.trim() && S.tb.trim();
+    stickyEl.className = 'sticky-in ' + (rdy ? 'rdy' : '');
+    const stats = [
+      {la:'LEFT',v:l,co:l<0?'var(--red)':l===0?'var(--field)':'var(--text)',su:''},
+      {la:'BETS',v:c,co:c>=MB?'var(--field)':'var(--orange)',su:'MIN '+MB},
+      {la:'USED',v:u,co:u>TP?'var(--red)':'var(--text)',su:'OF '+TP},
+      {la:'MAX',v:mx>0?mx.toFixed(1):'--',co:'var(--purple)',su:'IF HIT'}
+    ];
+    stickyEl.innerHTML = stats.map(x => 
+      '<div style="text-align:center;min-width:50px"><div style="font-size:10px;color:var(--textDim);letter-spacing:1px;margin-bottom:3px">'+x.la+'</div><div style="font-size:17px;font-weight:700;line-height:1.1;color:'+x.co+'">'+x.v+'</div>'+(x.su?'<div style="font-size:9px;color:var(--textDim);margin-top:3px">'+x.su+'</div>':'')+'</div>'
+    ).join('');
+  }
+  
+  // Update category point totals
+  const bet = B.find(b => b.id === id);
+  if(bet) {
+    const catBets = B.filter(b => b.cat === bet.cat);
+    const catPoints = catBets.reduce((s,b) => s+(S.al[b.id]||0), 0);
+    const catHeaders = document.querySelectorAll('.cat-h');
+    catHeaders.forEach(header => {
+      if(header.textContent.includes(bet.cat.toUpperCase())) {
+        const pointsSpan = header.querySelector('span[style*="fieldBg"]');
+        const rightDiv = header.children[1];
+        if(catPoints > 0) {
+          if(!pointsSpan) {
+            rightDiv.innerHTML = '<span style="font-size:11px;color:var(--field);background:var(--fieldBg);padding:4px 8px;border:2px solid #1b734044;letter-spacing:1px">'+catPoints+'PT</span>';
+          } else {
+            pointsSpan.textContent = catPoints + 'PT';
+          }
+        } else {
+          rightDiv.innerHTML = '';
+        }
+      }
+    });
+  }
+  
+  // Update the specific bet row
+  const betRows = document.querySelectorAll('.bet-row');
+  betRows.forEach(row => {
+    const minusBtn = row.querySelector('.pm.mi');
+    const plusBtn = row.querySelector('.pm.pl');
+    if(minusBtn && minusBtn.onclick && minusBtn.onclick.toString().includes('setA('+id+',')) {
+      const valueSpan = row.children[2].children[1];
+      const detailDiv = row.children[1].children[1];
+      const bet = B.find(b => b.id === id);
+      
+      valueSpan.textContent = v;
+      valueSpan.style.color = v > 0 ? 'var(--field)' : 'var(--border)';
+      minusBtn.disabled = v === 0;
+      
+      if(v > 0) {
+        const po = (v * bet.m).toFixed(1);
+        if(detailDiv) {
+          detailDiv.innerHTML = '<div style="font-size:10px;color:var(--field);margin-top:4px;letter-spacing:1px">→ '+po+' PTS IF HIT</div>';
+        } else {
+          row.children[1].innerHTML += '<div style="font-size:10px;color:var(--field);margin-top:4px;letter-spacing:1px">→ '+po+' PTS IF HIT</div>';
+        }
+      } else {
+        if(detailDiv) detailDiv.remove();
+      }
+    }
+  });
+  
+  updateBtn();
+}
 function sw(v){if(v==='scoreboard'){S.view='scoreboard';load();return;}if(v==='pick'&&S.my){S.view='confirmed';R();return;}S.view=v;R();}
 
 /* Input handlers that do NOT trigger full re-render */
@@ -118,7 +192,7 @@ function updateBtn(){
   if(!btn)return;
   const u=Object.values(S.al).reduce((a,b)=>a+b,0),c=Object.values(S.al).filter(v=>v>0).length;
   const rdy=u===TP&&c>=MB&&S.nm.trim()&&S.tb.trim();
-  let lbl='\u25b6 LOCK IN MY PICKS \u25c0';
+  let lbl='▶ LOCK IN MY PICKS ◀';
   if(S.locked)lbl='>>> LOCKED <<<';
   else if(S.submitting)lbl='SUBMITTING...';
   else if(!S.nm.trim())lbl='ENTER YOUR NAME';
@@ -141,7 +215,7 @@ async function submit(){
     if(d.error==='name_taken'){S.my=d.existing;S.entries=d.entries||S.entries;S.results=d.results||S.results;S.locked=d.locked||false;S.view='confirmed';S.submitting=false;R();return;}
     if(d.error==='locked'){S.err='SUBMISSIONS ARE LOCKED';S.locked=true;S.submitting=false;R();return;}
     S.entries=d.entries||[];S.results=d.results||{};S.locked=d.locked||false;S.my=e;S.view='confirmed';S.submitting=false;
-  }catch(e){S.err='SUBMIT FAILED \u2014 TRY AGAIN';S.submitting=false;}
+  }catch(e){S.err='SUBMIT FAILED — TRY AGAIN';S.submitting=false;}
   R();
 }
 
@@ -159,7 +233,7 @@ function R(){
   const ip=S.view==='pick',ic=S.view==='confirmed',is=S.view==='scoreboard';
   let h='';
 
-  h+='<div class="header"><h1>SUPER BOWL LX</h1><div class="sub">SEAHAWKS VS PATRIOTS \u00b7 SUN FEB 8</div><div class="tabs">';
+  h+='<div class="header"><h1>SUPER BOWL LX</h1><div class="sub">SEAHAWKS VS PATRIOTS · SUN FEB 8</div><div class="tabs">';
   h+='<button class="tab '+(ip||ic?'on':'')+'" onclick="sw(\'pick\')">MAKE PICKS</button>';
   h+='<button class="tab '+(is?'on':'')+'" onclick="sw(\'scoreboard\')">SCOREBOARD'+(S.entries.length?'<span class="ct">'+S.entries.length+'</span>':'')+'</button>';
   h+='</div></div>';
@@ -170,7 +244,7 @@ function R(){
   // Admin
   if(S.admin){
     h+='<div style="padding:14px 16px;border:3px solid #e6a80080;background:var(--yellowBg);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;box-shadow:3px 3px 0 rgba(0,0,0,0.06)">';
-    h+='<div><div style="font-size:13px;color:var(--yellow);letter-spacing:2px">\u2699 ADMIN MODE</div><div style="font-size:10px;color:var(--textDim);margin-top:4px">MARK WINNERS ON SCOREBOARD</div></div>';
+    h+='<div><div style="font-size:13px;color:var(--yellow);letter-spacing:2px">⚙ ADMIN MODE</div><div style="font-size:10px;color:var(--textDim);margin-top:4px">MARK WINNERS ON SCOREBOARD</div></div>';
     h+='<div style="display:flex;gap:8px">';
     h+='<button style="padding:10px 14px;background:'+(S.locked?'var(--field)':'var(--red)')+';color:#fff;font-size:12px;cursor:pointer;letter-spacing:1px;border:3px solid '+(S.locked?'var(--field)':'var(--red)')+';box-shadow:2px 2px 0 rgba(0,0,0,0.08);font-family:inherit" onclick="togL()">'+(S.locked?'UNLOCK':'LOCK')+'</button>';
     h+='<button style="padding:10px 14px;background:var(--panel);color:var(--textDim);font-size:12px;cursor:pointer;letter-spacing:1px;border:3px solid var(--border);box-shadow:2px 2px 0 rgba(0,0,0,0.06);font-family:inherit" onclick="S.admin=false;R()">EXIT</button>';
@@ -182,7 +256,7 @@ function R(){
     h+='<button style="padding:10px 12px;background:var(--panel);color:var(--textDim);cursor:pointer;font-size:12px;border:3px solid var(--border);box-shadow:2px 2px 0 rgba(0,0,0,0.06);font-family:inherit" onclick="S.showAd=false;S.ac=\'\';S.err=null;R()">X</button>';
     h+='</div>';
   } else {
-    h+='<div style="text-align:right;margin-bottom:8px"><button style="padding:8px 14px;background:var(--panel);color:var(--textDim);font-size:10px;cursor:pointer;letter-spacing:1px;border:3px solid var(--border);box-shadow:2px 2px 0 rgba(0,0,0,0.06);font-family:inherit" onclick="S.showAd=true;R()">\u2699 ADMIN</button></div>';
+    h+='<div style="text-align:right;margin-bottom:8px"><button style="padding:8px 14px;background:var(--panel);color:var(--textDim);font-size:10px;cursor:pointer;letter-spacing:1px;border:3px solid var(--border);box-shadow:2px 2px 0 rgba(0,0,0,0.06);font-family:inherit" onclick="S.showAd=true;R()">⚙ ADMIN</button></div>';
   }
 
   if(ip) h+=rPick(u,c,l,mx,rdy);
@@ -192,7 +266,7 @@ function R(){
   h+='</div>';
 
   if(ip){
-    let lbl='\u25b6 LOCK IN MY PICKS \u25c0';
+    let lbl='▶ LOCK IN MY PICKS ◀';
     let cls=rdy&&!S.locked&&!S.submitting?'sub-btn go':'sub-btn';
     let dis=!rdy||S.locked||S.submitting?'disabled':'';
     if(S.locked)lbl='>>> LOCKED <<<';
@@ -216,18 +290,18 @@ function R(){
 
 function rPick(u,c,l,mx,rdy){
   let h='';
-  if(S.locked)h+='<div style="padding:16px;border:3px solid var(--red);background:var(--redBg);margin-bottom:16px;text-align:center;box-shadow:3px 3px 0 rgba(0,0,0,0.06)"><div style="font-size:16px;color:var(--red);letter-spacing:2px">\u25a0 PICKS LOCKED \u25a0</div><div style="font-size:11px;color:var(--textDim);margin-top:8px">SUBMISSIONS CLOSED \u2014 CHECK SCOREBOARD</div></div>';
+  if(S.locked)h+='<div style="padding:16px;border:3px solid var(--red);background:var(--redBg);margin-bottom:16px;text-align:center;box-shadow:3px 3px 0 rgba(0,0,0,0.06)"><div style="font-size:16px;color:var(--red);letter-spacing:2px">■ PICKS LOCKED ■</div><div style="font-size:11px;color:var(--textDim);margin-top:8px">SUBMISSIONS CLOSED — CHECK SCOREBOARD</div></div>';
 
   // How to play
   h+='<div style="padding:20px 18px;margin-bottom:18px;border:3px solid var(--field);box-shadow:3px 3px 0 rgba(0,0,0,0.08);background:var(--panel)">';
-  h+='<h2 style="font-size:18px;margin:0 0 16px;color:var(--field);letter-spacing:2px;text-align:center">\u25c4 HOW TO PLAY \u25ba</h2>';
+  h+='<h2 style="font-size:18px;margin:0 0 16px;color:var(--field);letter-spacing:2px;text-align:center">◄ HOW TO PLAY ►</h2>';
   h+='<div class="hg">';
-  [{i:'$',t:'$20 BUY-IN',d:'EVERYONE PAYS TO JOIN',c:'var(--field)'},{i:'20',t:'20 POINTS',d:'SPREAD ACROSS 50 BETS',c:'var(--blue)'},{i:'5+',t:'MIN 5 BETS',d:'USE ALL 20 POINTS',c:'var(--yellow)'},{i:'\u00d7',t:'MULTIPLIERS',d:'PTS \u00d7 MULT = SCORE',c:'var(--orange)'}].forEach(function(x){
+  [{i:'$',t:'$20 BUY-IN',d:'EVERYONE PAYS TO JOIN',c:'var(--field)'},{i:'20',t:'20 POINTS',d:'SPREAD ACROSS 50 BETS',c:'var(--blue)'},{i:'5+',t:'MIN 5 BETS',d:'USE ALL 20 POINTS',c:'var(--yellow)'},{i:'×',t:'MULTIPLIERS',d:'PTS × MULT = SCORE',c:'var(--orange)'}].forEach(function(x){
     h+='<div style="padding:14px 10px;text-align:center;border:3px solid '+x.c+'22;box-shadow:2px 2px 0 rgba(0,0,0,0.04);background:'+x.c+'08"><div style="font-size:22px;color:'+x.c+';margin-bottom:6px">'+x.i+'</div><div style="font-size:11px;color:'+x.c+';margin-bottom:4px;letter-spacing:1px">'+x.t+'</div><div style="font-size:10px;color:var(--textDim);line-height:1.6">'+x.d+'</div></div>';
   });
   h+='</div>';
-  h+='<div style="margin-top:14px;padding:12px 14px;border:3px solid #c8960c66;background:var(--goldBg);box-shadow:2px 2px 0 rgba(0,0,0,0.04)"><div style="font-size:12px;color:var(--gold);margin-bottom:8px;letter-spacing:2px;text-align:center">\u265b PAYOUTS \u265b</div><div style="font-size:11px;color:var(--textMid);line-height:1.8;text-align:center"><span style="color:var(--field)">8+ ENTRIES:</span> 1ST 70% \u00b7 2ND 20% \u00b7 3RD 10%<br><span style="color:var(--orange)">7 OR LESS:</span> 1ST 80% \u00b7 2ND 20%<br>TIEBREAKER: CLOSEST COMBINED SCORE</div></div>';
-  h+='<div style="margin-top:10px;padding:10px 14px;border:3px solid #1b734044;background:var(--fieldBg);box-shadow:2px 2px 0 rgba(0,0,0,0.04)"><div style="font-size:11px;color:var(--field);line-height:1.8;text-align:center">\u26a1 SAFE BETS (1.4-2x) ADD UP SLOW<br>LONG SHOTS (10x+) WIN BIG OR BUST</div></div>';
+  h+='<div style="margin-top:14px;padding:12px 14px;border:3px solid #c8960c66;background:var(--goldBg);box-shadow:2px 2px 0 rgba(0,0,0,0.04)"><div style="font-size:12px;color:var(--gold);margin-bottom:8px;letter-spacing:2px;text-align:center">♛ PAYOUTS ♛</div><div style="font-size:11px;color:var(--textMid);line-height:1.8;text-align:center"><span style="color:var(--field)">8+ ENTRIES:</span> 1ST 70% · 2ND 20% · 3RD 10%<br><span style="color:var(--orange)">7 OR LESS:</span> 1ST 80% · 2ND 20%<br>TIEBREAKER: CLOSEST COMBINED SCORE</div></div>';
+  h+='<div style="margin-top:10px;padding:10px 14px;border:3px solid #1b734044;background:var(--fieldBg);box-shadow:2px 2px 0 rgba(0,0,0,0.04)"><div style="font-size:11px;color:var(--field);line-height:1.8;text-align:center">⚡ SAFE BETS (1.4-2x) ADD UP SLOW<br>LONG SHOTS (10x+) WIN BIG OR BUST</div></div>';
   h+='<div style="margin-top:10px;padding:12px 14px;border:3px solid #1565c066;background:var(--blueBg);display:flex;align-items:center;gap:12px;box-shadow:2px 2px 0 rgba(0,0,0,0.04)">';
   h+='<div style="flex:1"><div style="font-size:12px;color:var(--blue);letter-spacing:1px">$20 VIA VENMO</div><div style="font-size:10px;color:var(--textDim);margin-top:4px">PAY BEFORE OR AFTER PICKS</div></div>';
   h+='<a href="'+VU+'" target="_blank" rel="noopener" style="padding:10px 16px;background:var(--blue);color:#fff;font-size:12px;text-decoration:none;letter-spacing:1px;border:3px solid var(--blue);box-shadow:2px 2px 0 rgba(0,0,0,0.08);display:inline-block;font-family:inherit">PAY $20</a>';
@@ -249,22 +323,21 @@ function rPick(u,c,l,mx,rdy){
     h+='</div></div>';
   }
 
-  // Categories
+  // Categories - ALL ALWAYS VISIBLE
   CATS.forEach(function(cat){
-    var bs=B.filter(function(b){return b.cat===cat;}),cp=bs.reduce(function(s,b){return s+(S.al[b.id]||0);},0),op=S.ex[cat];
+    var bs=B.filter(function(b){return b.cat===cat;}),cp=bs.reduce(function(s,b){return s+(S.al[b.id]||0);},0);
     var ls=S.locked?'opacity:0.4;pointer-events:none;':'';
-    h+='<div style="margin-bottom:6px;'+ls+'"><button class="cat-h '+(op?'op':'')+'" onclick="togC(\''+cat+'\')">';
+    h+='<div style="margin-bottom:6px;'+ls+'">';
+    h+='<div class="cat-h">';
     h+='<div style="display:flex;align-items:center;gap:10px"><span style="font-size:18px;color:var(--field)">'+CI[cat]+'</span><div><div style="font-size:12px;letter-spacing:2px">'+cat.toUpperCase()+'</div><div style="font-size:9px;color:var(--textDim);margin-top:3px;letter-spacing:1px">'+CD[cat]+'</div></div></div>';
-    h+='<div style="display:flex;align-items:center;gap:8px">'+(cp>0?'<span style="font-size:11px;color:var(--field);background:var(--fieldBg);padding:4px 8px;border:2px solid #1b734044;letter-spacing:1px">'+cp+'PT</span>':'')+'<span style="color:var(--textDim);font-size:12px;display:inline-block;transition:transform .15s;transform:rotate('+(op?180:0)+'deg)">\u25bc</span></div>';
-    h+='</button>';
-    if(op){
-      h+='<div class="cat-b">';
-      bs.forEach(function(b){
-        var v=S.al[b.id]||0,po=v>0?(v*b.m).toFixed(1):null;
-        h+='<div class="bet-row"><span class="badge '+mc(b.m)+'">'+b.m+'x</span><div style="flex:1"><div style="font-size:12px;color:var(--text);line-height:1.5">'+esc(b.bet)+'</div>'+(po?'<div style="font-size:10px;color:var(--field);margin-top:4px;letter-spacing:1px">\u2192 '+po+' PTS IF HIT</div>':'')+'</div><div style="display:flex;align-items:center;gap:4px"><button class="pm mi" '+(v===0?'disabled':'')+' onclick="setA('+b.id+','+Math.max(0,v-1)+')">-</button><span style="width:32px;text-align:center;font-size:18px;font-weight:700;color:'+(v>0?'var(--field)':'var(--border)')+'">'+v+'</span><button class="pm pl" onclick="setA('+b.id+','+(v+1)+')">+</button></div></div>';
-      });
-      h+='</div>';
-    }
+    h+='<div style="display:flex;align-items:center;gap:8px">'+(cp>0?'<span style="font-size:11px;color:var(--field);background:var(--fieldBg);padding:4px 8px;border:2px solid #1b734044;letter-spacing:1px">'+cp+'PT</span>':'')+'</div>';
+    h+='</div>';
+    h+='<div class="cat-b">';
+    bs.forEach(function(b){
+      var v=S.al[b.id]||0,po=v>0?(v*b.m).toFixed(1):null;
+      h+='<div class="bet-row"><span class="badge '+mc(b.m)+'">'+b.m+'x</span><div style="flex:1"><div style="font-size:12px;color:var(--text);line-height:1.5">'+esc(b.bet)+'</div>'+(po?'<div style="font-size:10px;color:var(--field);margin-top:4px;letter-spacing:1px">→ '+po+' PTS IF HIT</div>':'')+'</div><div style="display:flex;align-items:center;gap:4px"><button class="pm mi" '+(v===0?'disabled':'')+' onclick="setA('+b.id+','+Math.max(0,v-1)+')">-</button><span style="width:32px;text-align:center;font-size:18px;font-weight:700;color:'+(v>0?'var(--field)':'var(--border)')+'">'+v+'</span><button class="pm pl" onclick="setA('+b.id+','+(v+1)+')">+</button></div></div>';
+    });
+    h+='</div>';
     h+='</div>';
   });
   return h;
@@ -274,28 +347,28 @@ function rConf(){
   var e=S.my,act=B.filter(function(b){return(e.allocs[b.id]||0)>0;}).sort(function(a,b){return(e.allocs[b.id]||0)*b.m-(e.allocs[a.id]||0)*a.m;});
   var mp=act.reduce(function(s,b){return s+(e.allocs[b.id]||0)*b.m;},0);
   var ts=new Date(e.submittedAt).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}).toUpperCase();
-  var h='<div style="text-align:center;padding:24px 16px;margin-bottom:18px;border:3px solid var(--field);background:var(--fieldBg);box-shadow:3px 3px 0 rgba(0,0,0,0.08)"><div style="font-size:22px;color:var(--field);letter-spacing:3px;margin-bottom:8px">\u25a0 PICKS LOCKED \u25a0</div><div style="font-size:13px;color:var(--text);letter-spacing:1px">'+esc(e.name).toUpperCase()+' \u2014 MAX: '+mp.toFixed(1)+' PTS</div><div style="font-size:11px;color:var(--textDim);margin-top:8px">TB: '+esc(e.tiebreaker)+' \u00b7 '+ts+'</div></div>';
+  var h='<div style="text-align:center;padding:24px 16px;margin-bottom:18px;border:3px solid var(--field);background:var(--fieldBg);box-shadow:3px 3px 0 rgba(0,0,0,0.08)"><div style="font-size:22px;color:var(--field);letter-spacing:3px;margin-bottom:8px">■ PICKS LOCKED ■</div><div style="font-size:13px;color:var(--text);letter-spacing:1px">'+esc(e.name).toUpperCase()+' — MAX: '+mp.toFixed(1)+' PTS</div><div style="font-size:11px;color:var(--textDim);margin-top:8px">TB: '+esc(e.tiebreaker)+' · '+ts+'</div></div>';
   h+='<div style="padding:16px;margin-bottom:18px;text-align:center;border:3px solid var(--blue);background:var(--blueBg);box-shadow:3px 3px 0 rgba(0,0,0,0.06)"><div style="font-size:13px;color:var(--text);letter-spacing:1px;margin-bottom:10px">DON\'T FORGET YOUR $20 BUY-IN!</div><a href="'+VU+'" target="_blank" rel="noopener" style="display:inline-block;padding:12px 30px;background:var(--blue);color:#fff;font-size:13px;text-decoration:none;letter-spacing:2px;border:3px solid var(--blue);box-shadow:2px 2px 0 rgba(0,0,0,0.08);font-family:inherit">PAY $20 ON VENMO</a><div style="font-size:10px;color:var(--textDim);margin-top:8px">OPENS VENMO APP</div></div>';
-  h+='<div style="font-size:14px;color:var(--field);letter-spacing:2px;margin-bottom:12px">\u25c4 YOUR PICKS \u25ba</div>';
+  h+='<div style="font-size:14px;color:var(--field);letter-spacing:2px;margin-bottom:12px">◄ YOUR PICKS ►</div>';
   act.forEach(function(b){
     var p=e.allocs[b.id];
-    h+='<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:6px;border:3px solid var(--border);box-shadow:2px 2px 0 rgba(0,0,0,0.06);background:var(--panel)"><span class="badge '+mc(b.m)+'">'+b.m+'x</span><span style="flex:1;font-size:11px">'+esc(b.bet).toUpperCase()+'</span><div style="text-align:right"><div style="font-size:13px;color:var(--field)">'+p+'PT</div><div style="font-size:11px;color:var(--blue)">\u2192'+(p*b.m).toFixed(1)+'</div></div></div>';
+    h+='<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:6px;border:3px solid var(--border);box-shadow:2px 2px 0 rgba(0,0,0,0.06);background:var(--panel)"><span class="badge '+mc(b.m)+'">'+b.m+'x</span><span style="flex:1;font-size:11px">'+esc(b.bet).toUpperCase()+'</span><div style="text-align:right"><div style="font-size:13px;color:var(--field)">'+p+'PT</div><div style="font-size:11px;color:var(--blue)">→'+(p*b.m).toFixed(1)+'</div></div></div>';
   });
-  if(!S.locked)h+='<div style="text-align:center;margin-top:16px"><button style="padding:10px 22px;background:var(--panel);color:var(--textDim);font-size:12px;cursor:pointer;letter-spacing:1px;border:3px solid var(--border);box-shadow:2px 2px 0 rgba(0,0,0,0.06);font-family:inherit" onclick="S.my=null;S.view=\'pick\';R()">\u270f NEW ENTRY</button></div>';
+  if(!S.locked)h+='<div style="text-align:center;margin-top:16px"><button style="padding:10px 22px;background:var(--panel);color:var(--textDim);font-size:12px;cursor:pointer;letter-spacing:1px;border:3px solid var(--border);box-shadow:2px 2px 0 rgba(0,0,0,0.06);font-family:inherit" onclick="S.my=null;S.view=\'pick\';R()">✏ NEW ENTRY</button></div>';
   return h;
 }
 
 function rScore(){
   var sc=S.entries.map(function(e){return Object.assign({},e,{score:B.reduce(function(s,b){return !e.allocs[b.id]?s:S.results[b.id]?s+e.allocs[b.id]*b.m:s;},0)});}).sort(function(a,b){return b.score-a.score;});
   var pc=['var(--gold)','var(--silver)','var(--bronze)'],pbg=['var(--goldBg)','var(--silverBg)','var(--bronzeBg)'];
-  var h='<div style="font-size:20px;color:var(--field);letter-spacing:3px;text-align:center;margin-bottom:6px">\u265b SCOREBOARD \u265b</div><div style="font-size:11px;color:var(--textDim);text-align:center;margin-bottom:16px">'+S.entries.length+' '+(S.entries.length===1?'ENTRY':'ENTRIES')+' \u00b7 '+Object.keys(S.results).length+' WINNERS MARKED</div>';
+  var h='<div style="font-size:20px;color:var(--field);letter-spacing:3px;text-align:center;margin-bottom:6px">♛ SCOREBOARD ♛</div><div style="font-size:11px;color:var(--textDim);text-align:center;margin-bottom:16px">'+S.entries.length+' '+(S.entries.length===1?'ENTRY':'ENTRIES')+' · '+Object.keys(S.results).length+' WINNERS MARKED</div>';
 
   if(S.entries.length>0){
     var pot=S.entries.length*BI,sp=S.entries.length>=8?[{p:'1ST',pc:.7},{p:'2ND',pc:.2},{p:'3RD',pc:.1}]:[{p:'1ST',pc:.8},{p:'2ND',pc:.2}];
     var spc={'1ST':'var(--gold)','2ND':'var(--silver)','3RD':'var(--bronze)'},spb={'1ST':'var(--goldBg)','2ND':'var(--silverBg)','3RD':'var(--bronzeBg)'};
     h+='<div style="padding:16px;margin-bottom:16px;border:3px solid var(--borderDk);box-shadow:3px 3px 0 rgba(0,0,0,0.06);background:var(--panel)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-size:13px;letter-spacing:2px">PRIZE POOL</div><div style="font-size:22px;color:var(--field);letter-spacing:2px">$'+pot+'</div></div><div style="display:flex;gap:8px">';
     sp.forEach(function(s){h+='<div style="flex:1;padding:12px 8px;text-align:center;border:3px solid '+spc[s.p]+'66;background:'+spb[s.p]+'"><div style="font-size:11px;color:'+spc[s.p]+';letter-spacing:1px">'+s.p+'</div><div style="font-size:20px;color:'+spc[s.p]+';margin-top:2px">$'+Math.round(pot*s.pc)+'</div><div style="font-size:10px;color:var(--textDim);margin-top:2px">'+Math.round(s.pc*100)+'%</div></div>';});
-    h+='</div><div style="font-size:10px;color:var(--textDim);text-align:center;margin-top:10px">'+S.entries.length+' '+(S.entries.length===1?'ENTRY':'ENTRIES')+' \u00d7 $'+BI+(S.entries.length<8?' \u00b7 3RD PLACE AT 8+ ENTRIES':'')+'</div></div>';
+    h+='</div><div style="font-size:10px;color:var(--textDim);text-align:center;margin-top:10px">'+S.entries.length+' '+(S.entries.length===1?'ENTRY':'ENTRIES')+' × $'+BI+(S.entries.length<8?' · 3RD PLACE AT 8+ ENTRIES':'')+'</div></div>';
   }
 
   if(sc.length===0){h+='<div style="padding:32px 16px;text-align:center;border:3px solid var(--border);box-shadow:3px 3px 0 rgba(0,0,0,0.06);background:var(--panel)"><div style="font-size:15px;color:var(--textDim);letter-spacing:2px">NO ENTRIES YET</div><div style="font-size:11px;color:var(--textDim);margin-top:10px">SHARE THE LINK!</div></div>';}
@@ -306,28 +379,28 @@ function rScore(){
     var co=i<3?pc[i]:'var(--borderDk)',bg=i<3?pbg[i]:'var(--panel)';
     h+='<div class="pr" style="border-color:'+co+';background:'+bg+'" onclick="S.ep=S.ep===\''+uid+'\'?null:\''+uid+'\';R()">';
     h+='<div style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border:3px solid '+co+';box-shadow:2px 2px 0 rgba(0,0,0,0.06);background:'+(i<3?co:'var(--bg)')+';color:'+(i<3?'#fff':'var(--textDim)')+'">'+( i+1)+'</div>';
-    h+='<div style="flex:1"><div style="font-size:13px;letter-spacing:1px">'+esc(e.name).toUpperCase()+'</div><div style="font-size:10px;color:var(--textDim);margin-top:3px">TB:'+esc(e.tiebreaker)+' \u00b7 '+ab.length+' BETS \u00b7 '+ts+'</div></div>';
+    h+='<div style="flex:1"><div style="font-size:13px;letter-spacing:1px">'+esc(e.name).toUpperCase()+'</div><div style="font-size:10px;color:var(--textDim);margin-top:3px">TB:'+esc(e.tiebreaker)+' · '+ab.length+' BETS · '+ts+'</div></div>';
     h+='<div style="font-size:20px;color:'+(i===0?'var(--field)':'var(--text)')+';letter-spacing:1px">'+e.score.toFixed(1)+'</div>';
-    h+='<span style="color:var(--textDim);font-size:12px;display:inline-block;transition:transform .15s;transform:rotate('+(op?180:0)+'deg)">\u25bc</span>';
+    h+='<span style="color:var(--textDim);font-size:12px;display:inline-block;transition:transform .15s;transform:rotate('+(op?180:0)+'deg)">▼</span>';
     h+='</div>';
     if(op){
       h+='<div class="pd" style="border-color:'+co+'">';
       ab.sort(function(a,b){return(e.allocs[b.id]||0)*b.m-(e.allocs[a.id]||0)*a.m;}).forEach(function(b){
         var p=e.allocs[b.id],hi=!!S.results[b.id];
-        h+='<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #d4cfc580;opacity:'+(hi?1:.4)+'"><span style="font-size:14px;width:20px;text-align:center;color:'+(hi?'var(--field)':'var(--textDim)')+'">'+(hi?'\u25a0':'\u25a1')+'</span><span class="badge '+mc(b.m)+'">'+b.m+'x</span><span style="flex:1;font-size:11px">'+esc(b.bet).toUpperCase()+'</span><span style="font-size:12px;color:'+(hi?'var(--field)':'var(--textDim)')+'">'+p+'\u2192'+(hi?(p*b.m).toFixed(1):'0')+'</span></div>';
+        h+='<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #d4cfc580;opacity:'+(hi?1:.4)+'"><span style="font-size:14px;width:20px;text-align:center;color:'+(hi?'var(--field)':'var(--textDim)')+'">'+(hi?'■':'□')+'</span><span class="badge '+mc(b.m)+'">'+b.m+'x</span><span style="flex:1;font-size:11px">'+esc(b.bet).toUpperCase()+'</span><span style="font-size:12px;color:'+(hi?'var(--field)':'var(--textDim)')+'">'+p+'→'+(hi?(p*b.m).toFixed(1):'0')+'</span></div>';
       });
       h+='</div>';
     }
   });}
 
   if(S.admin){
-    h+='<div style="font-size:15px;color:var(--field);letter-spacing:2px;text-align:center;margin:22px 0 12px;padding-top:12px;border-top:3px solid var(--border)">\u2699 MARK WINNERS \u2699</div>';
+    h+='<div style="font-size:15px;color:var(--field);letter-spacing:2px;text-align:center;margin:22px 0 12px;padding-top:12px;border-top:3px solid var(--border)">⚙ MARK WINNERS ⚙</div>';
     CATS.forEach(function(cat){
       var bs=B.filter(function(b){return b.cat===cat;});
       h+='<div style="margin-bottom:14px"><div style="font-size:11px;color:var(--textDim);letter-spacing:2px;margin-bottom:8px;padding-left:4px">'+CI[cat]+' '+cat.toUpperCase()+'</div>';
       bs.forEach(function(b){
         var hi=!!S.results[b.id],bc=S.entries.filter(function(e){return(e.allocs[b.id]||0)>0;}).length;
-        h+='<div class="ab '+(hi?'hit':'')+'" onclick="togR('+b.id+')"><div style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;border:3px solid '+(hi?'var(--field)':'var(--border)')+';background:'+(hi?'var(--field)':'var(--bg)')+';color:'+(hi?'#fff':'transparent')+';font-size:14px">'+(hi?'\u25a0':'')+'</div><span class="badge '+mc(b.m)+'">'+b.m+'x</span><span style="flex:1;font-size:11px">'+esc(b.bet).toUpperCase()+'</span>'+(bc>0?'<span style="font-size:11px;color:var(--textDim);background:var(--bg);padding:3px 8px;border:1px solid var(--border)">'+bc+'</span>':'')+'</div>';
+        h+='<div class="ab '+(hi?'hit':'')+'" onclick="togR('+b.id+')"><div style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;border:3px solid '+(hi?'var(--field)':'var(--border)')+';background:'+(hi?'var(--field)':'var(--bg)')+';color:'+(hi?'#fff':'transparent')+';font-size:14px">'+(hi?'■':'')+'</div><span class="badge '+mc(b.m)+'">'+b.m+'x</span><span style="flex:1;font-size:11px">'+esc(b.bet).toUpperCase()+'</span>'+(bc>0?'<span style="font-size:11px;color:var(--textDim);background:var(--bg);padding:3px 8px;border:1px solid var(--border)">'+bc+'</span>':'')+'</div>';
       });
       h+='</div>';
     });
