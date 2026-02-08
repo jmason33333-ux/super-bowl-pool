@@ -18,7 +18,7 @@
   }
   body { background: var(--bg); font-family: 'Silkscreen','Courier New',monospace; color: var(--text); -webkit-font-smoothing: antialiased; touch-action: manipulation; }
   button { font-family: inherit; border: none; outline: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; }
-  input { font-family: inherit; border: none; outline: none; touch-action: manipulation; }
+  input, textarea { font-family: inherit; border: none; outline: none; touch-action: manipulation; }
   a { font-family: inherit; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   body::before {
     content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -89,7 +89,7 @@ const CATS=["Game Outcome","Player Props","First TD Scorer","MVP","Novelty","Gat
 const CI={"Game Outcome":"▶","Player Props":"★","First TD Scorer":"◆","MVP":"♛","Novelty":"♠","Gatorade Color":"●","Long Shots":"⚡"};
 const CD={"Game Outcome":"WHO WINS? BY HOW MUCH?","Player Props":"YARDS, TDS, SACKS","First TD Scorer":"HIGH RISK HIGH REWARD","MVP":"PICK THE HERO","Novelty":"NO FOOTBALL KNOWLEDGE NEEDED","Gatorade Color":"WHAT COLOR GETS DUMPED?","Long Shots":"CHAOS BETS"};
 
-let S={view:'pick',entries:[],results:{},locked:false,al:{},nm:'',tb:'',ex:{},my:null,admin:false,showAd:false,ac:'',loading:true,submitting:false,err:null,ep:null};
+let S={view:'pick',entries:[],results:{},locked:false,al:{},nm:'',tb:'',ex:{},my:null,admin:false,showAd:false,ac:'',loading:true,submitting:false,err:null,ep:null,updates:[],updMsg:'',repNm:'',repTx:'',replyTo:null};
 CATS.forEach(c=>S.ex[c]=true);
 
 function mc(m){return m<=2?'bg':m<=4?'by':m<=10?'bo':m<=20?'br':'bp';}
@@ -100,7 +100,7 @@ async function apiG(){const r=await fetch(API);return r.json();}
 async function apiP(p){const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(p)});return r.json();}
 
 async function load(){
-  try{const d=await apiG();S.entries=d.entries||[];S.results=d.results||{};S.locked=d.locked||false;S.err=null;}
+  try{const d=await apiG();S.entries=d.entries||[];S.results=d.results||{};S.locked=d.locked||false;S.updates=d.updates||[];S.err=null;}
   catch(e){S.err='FAILED TO LOAD — CHECK CONNECTION';}
   S.loading=false;R();
 }
@@ -129,6 +129,12 @@ async function submit(){
 async function togR(id){try{const d=await apiP({action:'toggle_result',betId:id,adminCode:S.ac||AC});if(!d.error){S.entries=d.entries||[];S.results=d.results||{};S.locked=d.locked||false;}}catch(e){}R();}
 async function togL(){try{const d=await apiP({action:'toggle_lock',adminCode:S.ac||AC});if(!d.error){S.entries=d.entries||[];S.results=d.results||{};S.locked=d.locked||false;}}catch(e){}R();}
 function enterAd(){if(S.ac===AC){S.admin=true;S.showAd=false;R();}else{S.err='WRONG CODE';R();}}
+function onUpdMsg(el){S.updMsg=el.value;}
+function onRepNm(el){S.repNm=el.value;}
+function onRepTx(el){S.repTx=el.value;}
+function togReply(uid){S.replyTo=S.replyTo===uid?null:uid;R();}
+async function postUpd(){var m=S.updMsg;if(!m||!m.trim())return;try{var d=await apiP({action:'post_update',message:m.trim(),adminCode:S.ac||AC});if(!d.error){S.updates=d.updates||[];S.updMsg='';}}catch(e){}R();}
+async function postRep(uid){var n=S.repNm,t=S.repTx;if(!n||!n.trim()||!t||!t.trim())return;try{var d=await apiP({action:'post_reply',updateId:uid,name:n.trim(),text:t.trim()});if(!d.error){S.updates=d.updates||[];S.repTx='';S.replyTo=uid;}}catch(e){}R();}
 
 function R(){
   const a=document.getElementById('app');
@@ -268,6 +274,26 @@ function rScore(){
     h+=`<div style="padding:16px;margin-bottom:16px;border:3px solid var(--borderDk);box-shadow:3px 3px 0 rgba(0,0,0,0.06);background:var(--panel)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-size:13px;letter-spacing:2px">PRIZE POOL</div><div style="font-size:22px;color:var(--field);letter-spacing:2px">$${pot}</div></div><div style="display:flex;gap:8px">`;
     sp.forEach(s=>{h+=`<div style="flex:1;padding:12px 8px;text-align:center;border:3px solid ${spc[s.p]}66;background:${spb[s.p]}"><div style="font-size:11px;color:${spc[s.p]};letter-spacing:1px">${s.p}</div><div style="font-size:20px;color:${spc[s.p]};margin-top:2px">$${Math.round(pot*s.pc)}</div><div style="font-size:10px;color:var(--textDim);margin-top:2px">${Math.round(s.pc*100)}%</div></div>`;});
     h+=`</div><div style="font-size:10px;color:var(--textDim);text-align:center;margin-top:10px">${S.entries.length} ${S.entries.length===1?'ENTRY':'ENTRIES'} × $${BI}${S.entries.length<8?' · 3RD PLACE AT 8+ ENTRIES':''}</div></div>`;
+  }
+
+  // Game Updates Feed
+  if(S.updates.length>0||S.admin){
+    h+=`<div style="font-size:15px;color:var(--field);letter-spacing:2px;text-align:center;margin:4px 0 12px">◄ GAME UPDATES ►</div>`;
+    if(S.admin){h+=`<div style="padding:14px;margin-bottom:12px;border:3px solid #e6a80080;background:var(--yellowBg);box-shadow:3px 3px 0 rgba(0,0,0,0.06)"><textarea class="fi" rows="3" placeholder="POST A GAME UPDATE..." style="resize:vertical;margin-bottom:8px" oninput="onUpdMsg(this)">${esc(S.updMsg)}</textarea><button style="width:100%;padding:10px;background:var(--field);color:#fff;font-size:12px;cursor:pointer;letter-spacing:2px;border:3px solid var(--field);box-shadow:2px 2px 0 rgba(0,0,0,0.08);font-family:inherit" onclick="postUpd()">POST UPDATE</button></div>`;}
+    S.updates.forEach(u=>{
+      var ts=new Date(u.timestamp).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}).toUpperCase();
+      var rc=u.replies?u.replies.length:0,isO=S.replyTo===u.id;
+      h+=`<div style="margin-bottom:10px;border:3px solid var(--borderDk);box-shadow:3px 3px 0 rgba(0,0,0,0.06);background:var(--panel)">`;
+      h+=`<div style="padding:12px 14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="font-size:10px;color:var(--field);letter-spacing:2px">COMMISH</div><div style="font-size:10px;color:var(--textDim);letter-spacing:1px">${ts}</div></div><div style="font-size:12px;color:var(--text);line-height:1.7;white-space:pre-wrap">${esc(u.message)}</div></div>`;
+      h+=`<div style="border-top:1px solid var(--border);padding:8px 14px"><button style="background:none;color:var(--textDim);font-size:10px;cursor:pointer;letter-spacing:1px;padding:4px 0;font-family:inherit" onclick="togReply('${u.id}')">${isO?'HIDE':'REPLY'}${rc>0?' · '+rc+' REPL'+(rc===1?'Y':'IES'):''}</button></div>`;
+      if(isO){
+        h+=`<div style="border-top:1px solid var(--border);padding:10px 14px;background:var(--bg)">`;
+        if(u.replies&&u.replies.length>0){u.replies.forEach(r=>{var rts=new Date(r.timestamp).toLocaleString('en-US',{hour:'numeric',minute:'2-digit'}).toUpperCase();h+=`<div style="padding:8px 0;border-bottom:1px solid #d4cfc580"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10px;color:var(--field);letter-spacing:1px">${esc(r.name).toUpperCase()}</span><span style="font-size:9px;color:var(--textDim)">${rts}</span></div><div style="font-size:11px;color:var(--text);line-height:1.6">${esc(r.text)}</div></div>`;});}
+        h+=`<div style="display:flex;gap:6px;margin-top:10px"><input class="fi" type="text" placeholder="NAME" style="flex:1;padding:8px 10px;font-size:11px" value="${esc(S.repNm)}" oninput="onRepNm(this)"><input class="fi" type="text" placeholder="REPLY..." style="flex:2;padding:8px 10px;font-size:11px" value="${esc(S.repTx)}" oninput="onRepTx(this)"><button style="padding:8px 12px;background:var(--field);color:#fff;font-size:10px;cursor:pointer;letter-spacing:1px;border:3px solid var(--field);white-space:nowrap;font-family:inherit" onclick="postRep('${u.id}')">SEND</button></div></div>`;
+      }
+      h+=`</div>`;
+    });
+    h+=`<div style="margin-bottom:16px"></div>`;
   }
 
   if(sc.length===0){h+=`<div style="padding:32px 16px;text-align:center;border:3px solid var(--border);box-shadow:3px 3px 0 rgba(0,0,0,0.06);background:var(--panel)"><div style="font-size:15px;color:var(--textDim);letter-spacing:2px">NO ENTRIES YET</div><div style="font-size:11px;color:var(--textDim);margin-top:10px">SHARE THE LINK!</div></div>`;}
